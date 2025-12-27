@@ -2,11 +2,10 @@
   "compilerOptions": {
     "module": "NodeNext",
     "target": "es2016",
-    "strict": true
-  },
-  "build": {
+    "strict": true,
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
