@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(authMiddlewareCleaner);
 
 // Auth routes (public - no authentication required)
-router.use(authRouter);
+router.use("/auth", authRouter);
 
 // Auth middleware (protects routes below this point)
 router.use(authMiddleware);

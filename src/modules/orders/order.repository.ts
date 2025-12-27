@@ -7,30 +7,32 @@ import { GetOrdersInput } from "./order.schema";
 export class OrderRepository implements IOrderRepository {
   constructor(private readonly orderModel: typeof OrderModel) {}
 
-  async create(order: IOrder): Promise<IOrder> {
+  public create = async (order: IOrder): Promise<IOrder> => {
     const result = await this.orderModel.create(order);
     return result.toObject();
-  }
+  };
 
-  async findById(id: Types.ObjectId): Promise<IOrder | null> {
+  public findById = async (id: Types.ObjectId): Promise<IOrder | null> => {
     const result = await this.orderModel.findById(id).lean();
     return result;
-  }
+  };
 
-  async findAll(
+  public findAll = async (
     userId: Types.ObjectId,
     query: GetOrdersInput
-  ): Promise<IOrderPagination> {
+  ): Promise<IOrderPagination> => {
+    const filter: { userId: Types.ObjectId; stage?: string } = { userId };
+    if (query.stage) {
+      filter.stage = query.stage;
+    }
+
     const result = await this.orderModel
-      .find({ userId: userId, stage: query.stage })
+      .find(filter)
       .skip((query.page - 1) * query.limit)
       .limit(query.limit)
       .lean();
 
-    const total = await this.orderModel.countDocuments({
-      userId: userId,
-      stage: query.stage,
-    });
+    const total = await this.orderModel.countDocuments(filter);
 
     const pagination: IOrderPagination = {
       orders: result,
@@ -43,5 +45,5 @@ export class OrderRepository implements IOrderRepository {
     };
 
     return pagination;
-  }
+  };
 }

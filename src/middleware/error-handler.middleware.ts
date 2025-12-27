@@ -10,6 +10,7 @@ export const ErrorHandlerMiddleware = (
 ): void => {
   if (error instanceof AppError) {
     res.status(error.statusCode).json(error.toJSON());
+    return;
   }
 
   if (error instanceof z.ZodError) {
@@ -17,8 +18,9 @@ export const ErrorHandlerMiddleware = (
       name: "ZodError",
       message: "Invalid data",
       statusCode: StatusCodeError.BAD_REQUEST,
-      details: error._zod,
+      details: error.issues,
     });
+    return;
   }
 
   res.status(StatusCodeError.INTERNAL_SERVER_ERROR).json({
@@ -26,4 +28,6 @@ export const ErrorHandlerMiddleware = (
     message: "Internal server error",
     statusCode: StatusCodeError.INTERNAL_SERVER_ERROR,
   });
+  console.error(error);
+  return;
 };

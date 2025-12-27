@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { env } from "../config/env";
+import "./models/user.model";
+import "./models/order.model";
 
 export class Database {
   private static instance: Database;
@@ -14,6 +16,7 @@ export class Database {
     if (!Database.instance) {
       Database.instance = new Database();
     }
+
     return Database.instance;
   }
 

@@ -8,25 +8,25 @@ import { HttpResponse } from "../../shared/http-response";
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  public async createOrder(req: Request, res: Response) {
+  public createOrder = async (req: Request, res: Response) => {
     const user = req.authContext!.user;
 
     const data = CreateOrderSchema.parse(req.body);
 
     const order = await this.orderService.createOrder(data, user);
     return HttpResponse.created(res, order);
-  }
+  };
 
-  public async getOrders(req: Request, res: Response) {
+  public getOrders = async (req: Request, res: Response) => {
     const user = req.authContext!.user;
 
     const query = GetOrdersSchema.parse(req.query);
 
     const orders = await this.orderService.getOrders(user, query);
     return HttpResponse.ok(res, orders);
-  }
+  };
 
-  public async getOrderById(req: Request, res: Response) {
+  public getOrderById = async (req: Request, res: Response) => {
     const user = req.authContext!.user;
 
     const id = toObjectId(req.params.id);
@@ -36,5 +36,5 @@ export class OrderController {
 
     const order = await this.orderService.getOrderById(id, user);
     return HttpResponse.ok(res, order);
-  }
+  };
 }

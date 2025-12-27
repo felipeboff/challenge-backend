@@ -11,9 +11,9 @@ export class AuthService {
     private readonly userService: UserService
   ) {}
 
-  public async registerUser(
+  public registerUser = async (
     user: RegisterInput
-  ): Promise<{ token: string; user: IUserSafe }> {
+  ): Promise<{ token: string; user: IUserSafe }> => {
     const userCreated = await this.userService.createUser(user);
 
     const token = JwtService.sign({ userId: userCreated._id.toString() });
@@ -22,11 +22,11 @@ export class AuthService {
     }
 
     return { token, user: userCreated };
-  }
+  };
 
-  public async loginUser(
+  public loginUser = async (
     user: LoginInput
-  ): Promise<{ token: string; user: Omit<IUser, "password"> }> {
+  ): Promise<{ token: string; user: Omit<IUser, "password"> }> => {
     const userFound = await this.userRepository.findByEmail(user.email);
     if (!userFound) {
       throw new UnauthorizedError("Invalid email or password");
@@ -45,5 +45,5 @@ export class AuthService {
     }
 
     return { token, user: safeUser };
-  }
+  };
 }
