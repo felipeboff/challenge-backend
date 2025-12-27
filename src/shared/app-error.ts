@@ -44,10 +44,6 @@ export class AppError extends Error {
   }
 }
 
-export function isAppError(error: unknown): error is AppError {
-  return error instanceof AppError;
-}
-
 export class BadRequestError extends AppError {
   constructor(message = "Requisição inválida", details?: ErrorDetails) {
     super(message, StatusCodeError.BAD_REQUEST, details);

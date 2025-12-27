@@ -21,6 +21,12 @@ const orderSchema = new mongoose.Schema<IOrder>(
       required: true,
       index: true,
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
     expiresAt: { type: Date, required: true, index: true },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

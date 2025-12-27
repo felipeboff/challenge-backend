@@ -4,6 +4,7 @@ import {
   authMiddleware,
   authMiddlewareCleaner,
 } from "./middleware/auth.middleware";
+import { ErrorHandlerMiddleware } from "./middleware/error-handler.middleware";
 
 // Express application
 const app = express();
@@ -24,5 +25,8 @@ router.use(authMiddleware);
 
 // API routes
 app.use("/api", router);
+
+// Error handler middleware (must be last)
+app.use(ErrorHandlerMiddleware);
 
 export default app;
