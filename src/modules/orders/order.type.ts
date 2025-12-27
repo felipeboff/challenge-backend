@@ -24,3 +24,13 @@ export interface IOrder {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IOrderRepository {
+  create(order: IOrder): Promise<IOrder>;
+  findById(id: Types.ObjectId): Promise<IOrder | null>;
+  findByStage(stage: ENUMOrderStage): Promise<IOrder[]>;
+  findByStatus(status: ENUMOrderStatus): Promise<IOrder[]>;
+  findByExpiresAt(expiresAt: Date): Promise<IOrder[]>;
+  update(id: Types.ObjectId, order: IOrder): Promise<IOrder | null>;
+  delete(id: Types.ObjectId): Promise<boolean>;
+}

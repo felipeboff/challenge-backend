@@ -11,6 +11,8 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(1),
   JWT_EXPIRES_IN_MINUTES: z.coerce.number().min(1),
   JWT_ALGORITHM: z.enum(["HS256", "RS256", "ES256", "PS256"]),
+  PASSWORD_SALT: z.coerce.number().min(8).max(10),
+  PASSWORD_SECRET: z.string().min(8).max(16),
 });
 
 const result = envSchema.safeParse(process.env);

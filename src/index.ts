@@ -1,8 +1,6 @@
-import express from "express";
 import { database } from "./database/database";
 import { env } from "./config/env";
-
-const app = express();
+import app from "./app";
 
 // Connect to database when starting the application
 async function startServer() {
