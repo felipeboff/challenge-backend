@@ -1,6 +1,10 @@
 import { BadRequestError, NotFoundError } from "../../shared/app-error";
-import { CreateOrderInput, CreateOrderSchema } from "./order.schema";
-import { IOrder, IOrderRepository } from "./order.type";
+import {
+  CreateOrderInput,
+  CreateOrderSchema,
+  GetOrdersInput,
+} from "./order.schema";
+import { IOrder, IOrderPagination, IOrderRepository } from "./order.type";
 import { IUser } from "../users/user.type";
 import { Types } from "mongoose";
 
@@ -35,8 +39,11 @@ export class OrderService {
     return order;
   }
 
-  public async getOrders(user: IUser): Promise<IOrder[]> {
-    const orders = await this.orderRepository.findAll(user._id);
-    return orders;
+  public async getOrders(
+    user: IUser,
+    query: GetOrdersInput
+  ): Promise<IOrderPagination> {
+    const pagination = await this.orderRepository.findAll(user._id, query);
+    return pagination;
   }
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { OrderService } from "./order.service";
-import { CreateOrderSchema } from "./order.schema";
+import { CreateOrderSchema, GetOrdersSchema } from "./order.schema";
 import { BadRequestError } from "../../shared/app-error";
 import { toObjectId } from "../../shared/object-id-utils";
 import { HttpResponse } from "../../shared/http-response";
@@ -19,7 +19,10 @@ export class OrderController {
 
   public async getOrders(req: Request, res: Response) {
     const user = req.authContext!.user;
-    const orders = await this.orderService.getOrders(user);
+
+    const query = GetOrdersSchema.parse(req.query);
+
+    const orders = await this.orderService.getOrders(user, query);
     return HttpResponse.ok(res, orders);
   }
 

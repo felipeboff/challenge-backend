@@ -5,6 +5,7 @@ import {
   authMiddlewareCleaner,
 } from "./middleware/auth.middleware";
 import { ErrorHandlerMiddleware } from "./middleware/error-handler.middleware";
+import orderRouter from "./modules/orders/order.router";
 
 // Express application
 const app = express();
@@ -22,6 +23,9 @@ router.use(authRouter);
 
 // Auth middleware (protects routes below this point)
 router.use(authMiddleware);
+
+// Order routes
+router.use("/orders", orderRouter);
 
 // API routes
 app.use("/api", router);

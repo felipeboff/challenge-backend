@@ -13,3 +13,11 @@ export const CreateOrderSchema = z.object({
 });
 
 export type CreateOrderInput = z.infer<typeof CreateOrderSchema>;
+
+export const GetOrdersSchema = z.object({
+  page: z.number().min(1).optional().default(1),
+  limit: z.number().min(1).optional().default(50),
+  stage: z.enum(ENUMOrderStage).optional(),
+});
+
+export type GetOrdersInput = z.infer<typeof GetOrdersSchema>;

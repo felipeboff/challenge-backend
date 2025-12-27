@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { GetOrdersInput } from "./order.schema";
 
 export enum ENUMOrderStatus {
   PENDING = "pending",
@@ -26,8 +27,21 @@ export interface IOrder {
   updatedAt: Date;
 }
 
+export interface IOrderPagination {
+  orders: IOrder[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
 export interface IOrderRepository {
   create(order: IOrder): Promise<IOrder>;
   findById(id: Types.ObjectId): Promise<IOrder | null>;
-  findAll(userId: Types.ObjectId): Promise<IOrder[]>;
+  findAll(
+    userId: Types.ObjectId,
+    query: GetOrdersInput
+  ): Promise<IOrderPagination>;
 }
