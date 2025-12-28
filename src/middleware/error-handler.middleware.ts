@@ -7,7 +7,7 @@ export const ErrorHandlerMiddleware = (
   error: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction,
+  next: NextFunction
 ): void => {
   if (error instanceof AppError) {
     res.status(error.statusCode).json(error.toJSON());
@@ -30,5 +30,5 @@ export const ErrorHandlerMiddleware = (
     statusCode: StatusCodeError.INTERNAL_SERVER_ERROR,
   });
   console.error(error);
-  _next();
+  next();
 };
