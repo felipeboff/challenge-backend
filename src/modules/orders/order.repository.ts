@@ -1,8 +1,9 @@
-import { IOrderPagination, IOrderRepository } from "./order.type";
+import { IOrderPagination, IOrderRepository, IService } from "./order.type";
 import { OrderModel } from "../../database/models/order.model";
 import { IOrder } from "./order.type";
 import { Types } from "mongoose";
-import { GetOrdersInput } from "./order.schema";
+import { GetOrdersQueryInput } from "./order.schema";
+import { NotFoundError } from "../../shared/app-error";
 
 export class OrderRepository implements IOrderRepository {
   constructor(private readonly orderModel: typeof OrderModel) {}
@@ -12,24 +13,46 @@ export class OrderRepository implements IOrderRepository {
     return result.toObject();
   };
 
-  public findById = async (id: Types.ObjectId): Promise<IOrder | null> => {
-    const result = await this.orderModel.findById(id).lean();
+  public findById = async (orderId: Types.ObjectId): Promise<IOrder | null> => {
+    const result = await this.orderModel.findById(orderId).lean();
     return result;
   };
 
+  public createService = async (
+    orderId: Types.ObjectId,
+    service: IService
+  ): Promise<IService> => {
+    const result = await this.orderModel
+      .findByIdAndUpdate(
+        orderId,
+        { $push: { services: service } },
+        { new: true }
+      )
+      .lean();
+
+    const createdService = result?.services.find((s) =>
+      s._id.equals(service._id)
+    );
+    if (!createdService) {
+      throw new NotFoundError("Service not found");
+    }
+
+    return createdService;
+  };
+
   public update = async (
-    id: Types.ObjectId,
+    orderId: Types.ObjectId,
     data: IOrder
   ): Promise<IOrder | null> => {
     const result = await this.orderModel
-      .findByIdAndUpdate(id, data, { new: true })
+      .findByIdAndUpdate(orderId, data, { new: true })
       .lean();
     return result;
   };
 
-  public findAll = async (
+  public findAllPaginated = async (
     userId: Types.ObjectId,
-    query: GetOrdersInput
+    query: GetOrdersQueryInput
   ): Promise<IOrderPagination> => {
     const filter: { userId: Types.ObjectId; stage?: string } = { userId };
     if (query.stage) {
@@ -55,5 +78,31 @@ export class OrderRepository implements IOrderRepository {
     };
 
     return pagination;
+  };
+
+  public updateService = async (
+    orderId: Types.ObjectId,
+    serviceId: Types.ObjectId,
+    service: IService
+  ): Promise<IService> => {
+    const result = await this.orderModel
+      .findByIdAndUpdate(
+        orderId,
+        { $set: { "services.$[elem]": service } },
+        {
+          new: true,
+          arrayFilters: [{ "elem._id": serviceId }],
+        }
+      )
+      .lean();
+
+    const updatedService = result?.services.find((s) =>
+      s._id.equals(serviceId)
+    );
+    if (!updatedService) {
+      throw new NotFoundError("Service not found");
+    }
+
+    return updatedService;
   };
 }

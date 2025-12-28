@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { GetOrdersInput } from "./order.schema";
+import { GetOrdersQueryInput } from "./order.schema";
 
 export enum ENUMOrderStatus {
   ACTIVE = "active",
@@ -20,6 +20,7 @@ export interface IOrder {
   stage: ENUMOrderStage;
   status: ENUMOrderStatus;
   userId: Types.ObjectId;
+  services: IService[];
   expiresAt: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -37,11 +38,17 @@ export interface IOrderPagination {
 
 export interface IOrderRepository {
   create(order: IOrder): Promise<IOrder>;
-  update(id: Types.ObjectId, data: IOrder): Promise<IOrder | null>;
-  findById(id: Types.ObjectId): Promise<IOrder | null>;
-  findAll(
+  createService(orderId: Types.ObjectId, service: IService): Promise<IService>;
+  updateService(
+    orderId: Types.ObjectId,
+    serviceId: Types.ObjectId,
+    service: IService
+  ): Promise<IService>;
+  update(orderId: Types.ObjectId, data: IOrder): Promise<IOrder | null>;
+  findById(orderId: Types.ObjectId): Promise<IOrder | null>;
+  findAllPaginated(
     userId: Types.ObjectId,
-    query: GetOrdersInput
+    query: GetOrdersQueryInput
   ): Promise<IOrderPagination>;
 }
 
@@ -64,3 +71,17 @@ export const ORDER_STAGE_SEQUENCE: Record<number, ENUMOrderStage> = {
   1: ENUMOrderStage.ANALYSIS,
   2: ENUMOrderStage.COMPLETED,
 };
+
+export enum ENUMServiceStatus {
+  PENDING = "pending",
+  DONE = "done",
+  CANCELLED = "cancelled",
+}
+export interface IService {
+  _id: Types.ObjectId;
+  name: string;
+  value: number;
+  status: ENUMServiceStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}

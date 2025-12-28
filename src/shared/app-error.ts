@@ -45,49 +45,49 @@ export class AppError extends Error {
 }
 
 export class BadRequestError extends AppError {
-  constructor(message = "Requisição inválida", details?: ErrorDetails) {
+  constructor(message = "Bad Request", details?: ErrorDetails) {
     super(message, StatusCodeError.BAD_REQUEST, details);
     this.name = "BadRequestError";
   }
 }
 
 export class UnauthorizedError extends AppError {
-  constructor(message = "Não autorizado", details?: ErrorDetails) {
+  constructor(message = "Unauthorized", details?: ErrorDetails) {
     super(message, StatusCodeError.UNAUTHORIZED, details);
     this.name = "UnauthorizedError";
   }
 }
 
 export class ForbiddenError extends AppError {
-  constructor(message = "Acesso negado", details?: ErrorDetails) {
+  constructor(message = "Forbidden", details?: ErrorDetails) {
     super(message, StatusCodeError.FORBIDDEN, details);
     this.name = "ForbiddenError";
   }
 }
 
 export class NotFoundError extends AppError {
-  constructor(message = "Recurso não encontrado", details?: ErrorDetails) {
+  constructor(message = "Not Found", details?: ErrorDetails) {
     super(message, StatusCodeError.NOT_FOUND, details);
     this.name = "NotFoundError";
   }
 }
 
 export class ConflictError extends AppError {
-  constructor(message = "Conflito na requisição", details?: ErrorDetails) {
+  constructor(message = "Conflict", details?: ErrorDetails) {
     super(message, StatusCodeError.CONFLICT, details);
     this.name = "ConflictError";
   }
 }
 
 export class UnprocessableEntityError extends AppError {
-  constructor(message = "Entidade não processável", details?: ErrorDetails) {
+  constructor(message = "Unprocessable Entity", details?: ErrorDetails) {
     super(message, StatusCodeError.UNPROCESSABLE_ENTITY, details);
     this.name = "UnprocessableEntityError";
   }
 }
 
 export class InternalServerError extends AppError {
-  constructor(message = "Erro interno do servidor", details?: ErrorDetails) {
+  constructor(message = "Internal Server Error", details?: ErrorDetails) {
     super(message, StatusCodeError.INTERNAL_SERVER_ERROR, details, false);
     this.name = "InternalServerError";
   }

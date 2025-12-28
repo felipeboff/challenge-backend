@@ -5,16 +5,20 @@ import {
 } from "../../shared/app-error";
 import {
   CreateOrderInput,
-  GetOrdersInput,
+  CreateServiceInput,
+  GetOrdersQueryInput,
   UpdateOrderInput,
+  UpdateServiceInput,
 } from "./order.schema";
 import {
   ALLOWED_ORDER_STAGE_TRANSITIONS,
   ENUMOrderStage,
   ENUMOrderStatus,
+  ENUMServiceStatus,
   IOrder,
   IOrderPagination,
   IOrderRepository,
+  IService,
   ORDER_STAGE_SEQUENCE,
 } from "./order.type";
 import { IUser } from "../users/user.type";
@@ -27,8 +31,27 @@ export class OrderService {
     order: CreateOrderInput,
     user: IUser
   ): Promise<IOrder> => {
+    const services = order.services.map((service) => ({
+      ...service,
+      _id: new Types.ObjectId(),
+      status: ENUMServiceStatus.PENDING,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }));
+
+    const totalValue = services.reduce(
+      (acc: number, service: IService) => acc + service.value,
+      0
+    );
+    if (totalValue <= 0) {
+      throw new BadRequestError(
+        "Total value of services must be greater than 0"
+      );
+    }
+
     const orderData: IOrder = {
       ...order,
+      services,
       _id: new Types.ObjectId(),
       userId: user._id,
       stage: ENUMOrderStage.CREATED,
@@ -42,10 +65,10 @@ export class OrderService {
   };
 
   public getOrderById = async (
-    id: Types.ObjectId,
+    orderId: Types.ObjectId,
     user: IUser
   ): Promise<IOrder> => {
-    const order = await this.orderRepository.findById(id);
+    const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
       throw new NotFoundError("Order not found");
     }
@@ -55,25 +78,58 @@ export class OrderService {
 
   public getOrders = async (
     user: IUser,
-    query: GetOrdersInput
+    query: GetOrdersQueryInput
   ): Promise<IOrderPagination> => {
-    const pagination = await this.orderRepository.findAll(user._id, query);
+    const pagination = await this.orderRepository.findAllPaginated(
+      user._id,
+      query
+    );
     return pagination;
   };
 
   public updateOrder = async (
-    id: Types.ObjectId,
+    orderId: Types.ObjectId,
     user: IUser,
     data: UpdateOrderInput
   ): Promise<IOrder> => {
-    const order = await this.orderRepository.findById(id);
+    const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
       throw new NotFoundError("Order not found");
+    }
+
+    const services: IService[] | undefined = data.services?.map(
+      (service: Partial<IService>) => {
+        const serviceFound = order.services.find((s) =>
+          s._id.equals(service._id)
+        );
+        if (!serviceFound) {
+          throw new NotFoundError("Service not found");
+        }
+        return {
+          ...serviceFound,
+          ...service,
+        };
+      }
+    );
+
+    if (!services) {
+      throw new BadRequestError("Services not found");
+    }
+
+    const totalValue = services.reduce(
+      (acc: number, service: IService) => acc + service.value,
+      0
+    );
+    if (totalValue <= 0) {
+      throw new BadRequestError(
+        "Total value of services must be greater than 0"
+      );
     }
 
     const orderData: IOrder = {
       ...order,
       ...data,
+      services,
       updatedAt: new Date(),
     };
 
@@ -89,7 +145,7 @@ export class OrderService {
       }
     }
 
-    const updatedOrder = await this.orderRepository.update(id, orderData);
+    const updatedOrder = await this.orderRepository.update(orderId, orderData);
     if (!updatedOrder) {
       throw new InternalServerError("Failed to update order");
     }
@@ -98,10 +154,10 @@ export class OrderService {
   };
 
   public advanceOrderStage = async (
-    id: Types.ObjectId,
+    orderId: Types.ObjectId,
     user: IUser
   ): Promise<IOrder> => {
-    const order = await this.orderRepository.findById(id);
+    const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
       throw new NotFoundError("Order not found");
     }
@@ -119,11 +175,66 @@ export class OrderService {
       updatedAt: new Date(),
     };
 
-    const updatedOrder = await this.orderRepository.update(id, orderData);
+    const updatedOrder = await this.orderRepository.update(orderId, orderData);
     if (!updatedOrder) {
       throw new InternalServerError("Failed to update order");
     }
 
     return updatedOrder;
+  };
+
+  public createService = async (
+    orderId: Types.ObjectId,
+    user: IUser,
+    data: CreateServiceInput
+  ): Promise<IService> => {
+    const order = await this.orderRepository.findById(orderId);
+    if (!order || !order.userId.equals(user._id)) {
+      throw new NotFoundError("Order not found");
+    }
+
+    const service: IService = {
+      ...data,
+      _id: new Types.ObjectId(),
+      status: ENUMServiceStatus.PENDING,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const createdService = await this.orderRepository.createService(
+      orderId,
+      service
+    );
+    return createdService;
+  };
+
+  public updateService = async (
+    orderId: Types.ObjectId,
+    serviceId: Types.ObjectId,
+    user: IUser,
+    data: UpdateServiceInput
+  ): Promise<IService> => {
+    const order = await this.orderRepository.findById(orderId);
+    if (!order || !order.userId.equals(user._id)) {
+      throw new NotFoundError("Order not found");
+    }
+
+    const serviceFound = order.services.find((s) => s._id.equals(serviceId));
+    if (!serviceFound) {
+      throw new NotFoundError("Service not found");
+    }
+
+    const service: IService = {
+      ...serviceFound,
+      ...data,
+      updatedAt: new Date(),
+    };
+
+    const updatedService = await this.orderRepository.updateService(
+      orderId,
+      serviceId,
+      service
+    );
+    return updatedService;
   };
 }

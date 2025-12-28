@@ -3,7 +3,32 @@ import {
   IOrder,
   ENUMOrderStage,
   ENUMOrderStatus,
+  ENUMServiceStatus,
+  IService,
 } from "../../modules/orders/order.type";
+
+const serviceSchema = new mongoose.Schema<IService>(
+  {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: () => new mongoose.Types.ObjectId(),
+    },
+    name: { type: String, required: true },
+    value: { type: Number, required: true },
+    status: {
+      type: String,
+      enum: ENUMServiceStatus,
+      required: true,
+      index: true,
+    },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
 
 const orderSchema = new mongoose.Schema<IOrder>(
   {
@@ -21,6 +46,7 @@ const orderSchema = new mongoose.Schema<IOrder>(
       required: true,
       index: true,
     },
+    services: { type: [serviceSchema], required: true },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
