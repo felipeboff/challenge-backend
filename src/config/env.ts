@@ -10,6 +10,8 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]),
   MONGO_URI: z.string().min(1),
   MONGO_DB_TEST: z.string().min(1),
+  MONGO_DB_PRODUCTION: z.string().min(1),
+  MONGO_DB_DEVELOPMENT: z.string().min(1),
   JWT_SECRET: z.string().min(1),
   JWT_EXPIRES_IN_MINUTES: z.coerce.number().min(1),
   JWT_ALGORITHM: z.enum(["HS256", "RS256", "ES256", "PS256"]),

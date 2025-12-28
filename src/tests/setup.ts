@@ -16,33 +16,29 @@ async function setupTestDatabase(): Promise<void> {
     await database.clearConnection();
   }
 
-  await mongoose.connect(env.MONGO_DB_TEST);
-
-  console.log("✅ Connected to test database");
+  await mongoose.connect(env.MONGO_URI, {
+    dbName: env.MONGO_DB_TEST,
+  });
 }
 
 async function teardownTestDatabase(): Promise<void> {
-  const collections = mongoose.connection.collections;
-
-  for (const key in collections) {
-    const collection = collections[key];
-    await collection.deleteMany({});
+  const db = mongoose.connection.db;
+  if (!db || !db.databaseName || db.databaseName !== env.MONGO_DB_TEST) {
+    throw new Error("Database name is not correct");
   }
 
+  await db.dropDatabase();
   await mongoose.connection.close();
-
   await database.clearConnection();
-
-  console.log("✅ Test database cleaned up and disconnected");
 }
 
 async function cleanupDatabase(): Promise<void> {
-  const collections = mongoose.connection.collections;
-
-  for (const key in collections) {
-    const collection = collections[key];
-    await collection.deleteMany({});
+  const db = mongoose.connection.db;
+  if (!db || !db.databaseName || db.databaseName !== env.MONGO_DB_TEST) {
+    throw new Error("Database name is not correct");
   }
+
+  await db.dropDatabase();
 }
 
 beforeAll(async () => {
