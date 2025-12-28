@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { AppError, StatusCodeError } from "../shared/app-error";
 import z from "zod";
+
+import { AppError, StatusCodeError } from "../shared/app-error";
 
 export const ErrorHandlerMiddleware = (
   error: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): void => {
   if (error instanceof AppError) {
     res.status(error.statusCode).json(error.toJSON());
@@ -29,5 +30,5 @@ export const ErrorHandlerMiddleware = (
     statusCode: StatusCodeError.INTERNAL_SERVER_ERROR,
   });
   console.error(error);
-  return;
+  _next();
 };

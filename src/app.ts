@@ -1,10 +1,11 @@
 import express from "express";
-import authRouter from "./modules/auth/auth.router";
+
 import {
   authMiddleware,
   authMiddlewareCleaner,
 } from "./middleware/auth.middleware";
 import { ErrorHandlerMiddleware } from "./middleware/error-handler.middleware";
+import authRouter from "./modules/auth/auth.router";
 import orderRouter from "./modules/orders/order.router";
 
 // Express application

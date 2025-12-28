@@ -1,5 +1,6 @@
-import { env } from "../config/env";
 import jwt, { JwtPayload } from "jsonwebtoken";
+
+import { env } from "../config/env";
 
 export class JwtService {
   private static readonly secret = env.JWT_SECRET;

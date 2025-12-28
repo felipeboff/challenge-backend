@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+
 import { GetOrdersQueryInput } from "./order.schema";
 
 export enum ENUMOrderStatus {
@@ -42,13 +43,13 @@ export interface IOrderRepository {
   updateService(
     orderId: Types.ObjectId,
     serviceId: Types.ObjectId,
-    service: IService
+    service: IService,
   ): Promise<IService>;
   update(orderId: Types.ObjectId, data: IOrder): Promise<IOrder | null>;
   findById(orderId: Types.ObjectId): Promise<IOrder | null>;
   findAllPaginated(
     userId: Types.ObjectId,
-    query: GetOrdersQueryInput
+    query: GetOrdersQueryInput,
   ): Promise<IOrderPagination>;
 }
 

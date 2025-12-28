@@ -1,7 +1,8 @@
 import { Types } from "mongoose";
+
+import { ConflictError, NotFoundError } from "../../shared/app-error";
 import { PasswordHash } from "../../shared/password-hash";
 import { IUser, IUserCreate, IUserRepository, IUserSafe } from "./user.type";
-import { ConflictError, NotFoundError } from "../../shared/app-error";
 
 export class UserService {
   constructor(private readonly userRepository: IUserRepository) {}

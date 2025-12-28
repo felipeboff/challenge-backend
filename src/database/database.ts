@@ -1,7 +1,9 @@
-import mongoose from "mongoose";
-import { env } from "../config/env";
 import "./models/user.model";
 import "./models/order.model";
+
+import mongoose from "mongoose";
+
+import { env } from "../config/env";
 
 export class Database {
   private static instance: Database;
@@ -108,7 +110,7 @@ export class Database {
     if (this.isConnected) {
       await this.disconnect();
     }
-    Database.instance = null as any;
+    Database.instance = undefined as unknown as Database;
   }
 }
 

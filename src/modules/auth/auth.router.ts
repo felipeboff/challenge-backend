@@ -1,9 +1,10 @@
 import { Router } from "express";
+
+import { UserModel } from "../../database/models/user.model";
+import { UserRepository } from "../users/user.repository";
+import { UserService } from "../users/user.service";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-import { UserModel } from "../../database/models/user.model";
-import { UserService } from "../users/user.service";
-import { UserRepository } from "../users/user.repository";
 
 const router = Router();
 

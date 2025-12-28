@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+
 import { env } from "../config/env";
 
 export class PasswordHash {

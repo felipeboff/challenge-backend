@@ -1,9 +1,10 @@
-import { IOrderPagination, IOrderRepository, IService } from "./order.type";
-import { OrderModel } from "../../database/models/order.model";
-import { IOrder } from "./order.type";
 import { Types } from "mongoose";
-import { GetOrdersQueryInput } from "./order.schema";
+
+import { OrderModel } from "../../database/models/order.model";
 import { NotFoundError } from "../../shared/app-error";
+import { GetOrdersQueryInput } from "./order.schema";
+import { IOrderPagination, IOrderRepository, IService } from "./order.type";
+import { IOrder } from "./order.type";
 
 export class OrderRepository implements IOrderRepository {
   constructor(private readonly orderModel: typeof OrderModel) {}
@@ -20,18 +21,18 @@ export class OrderRepository implements IOrderRepository {
 
   public createService = async (
     orderId: Types.ObjectId,
-    service: IService
+    service: IService,
   ): Promise<IService> => {
     const result = await this.orderModel
       .findByIdAndUpdate(
         orderId,
         { $push: { services: service } },
-        { new: true }
+        { new: true },
       )
       .lean();
 
     const createdService = result?.services.find((s) =>
-      s._id.equals(service._id)
+      s._id.equals(service._id),
     );
     if (!createdService) {
       throw new NotFoundError("Service not found");
@@ -42,7 +43,7 @@ export class OrderRepository implements IOrderRepository {
 
   public update = async (
     orderId: Types.ObjectId,
-    data: IOrder
+    data: IOrder,
   ): Promise<IOrder | null> => {
     const result = await this.orderModel
       .findByIdAndUpdate(orderId, data, { new: true })
@@ -52,7 +53,7 @@ export class OrderRepository implements IOrderRepository {
 
   public findAllPaginated = async (
     userId: Types.ObjectId,
-    query: GetOrdersQueryInput
+    query: GetOrdersQueryInput,
   ): Promise<IOrderPagination> => {
     const filter: { userId: Types.ObjectId; stage?: string } = { userId };
     if (query.stage) {
@@ -83,7 +84,7 @@ export class OrderRepository implements IOrderRepository {
   public updateService = async (
     orderId: Types.ObjectId,
     serviceId: Types.ObjectId,
-    service: IService
+    service: IService,
   ): Promise<IService> => {
     const result = await this.orderModel
       .findByIdAndUpdate(
@@ -92,12 +93,12 @@ export class OrderRepository implements IOrderRepository {
         {
           new: true,
           arrayFilters: [{ "elem._id": serviceId }],
-        }
+        },
       )
       .lean();
 
     const updatedService = result?.services.find((s) =>
-      s._id.equals(serviceId)
+      s._id.equals(serviceId),
     );
     if (!updatedService) {
       throw new NotFoundError("Service not found");

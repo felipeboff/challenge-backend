@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+
 import {
-  IOrder,
   ENUMOrderStage,
   ENUMOrderStatus,
   ENUMServiceStatus,
+  IOrder,
   IService,
 } from "../../modules/orders/order.type";
 
@@ -27,7 +28,7 @@ const serviceSchema = new mongoose.Schema<IService>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 const orderSchema = new mongoose.Schema<IOrder>(
@@ -60,7 +61,7 @@ const orderSchema = new mongoose.Schema<IOrder>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 export const OrderModel = mongoose.model<IOrder>("Order", orderSchema);

@@ -1,8 +1,11 @@
+import { Types } from "mongoose";
+
 import {
   BadRequestError,
   InternalServerError,
   NotFoundError,
 } from "../../shared/app-error";
+import { IUser } from "../users/user.type";
 import {
   CreateOrderInput,
   CreateServiceInput,
@@ -21,15 +24,13 @@ import {
   IService,
   ORDER_STAGE_SEQUENCE,
 } from "./order.type";
-import { IUser } from "../users/user.type";
-import { Types } from "mongoose";
 
 export class OrderService {
   constructor(private readonly orderRepository: IOrderRepository) {}
 
   public createOrder = async (
     order: CreateOrderInput,
-    user: IUser
+    user: IUser,
   ): Promise<IOrder> => {
     const services = order.services.map((service) => ({
       ...service,
@@ -41,11 +42,11 @@ export class OrderService {
 
     const totalValue = services.reduce(
       (acc: number, service: IService) => acc + service.value,
-      0
+      0,
     );
     if (totalValue <= 0) {
       throw new BadRequestError(
-        "Total value of services must be greater than 0"
+        "Total value of services must be greater than 0",
       );
     }
 
@@ -66,7 +67,7 @@ export class OrderService {
 
   public getOrderById = async (
     orderId: Types.ObjectId,
-    user: IUser
+    user: IUser,
   ): Promise<IOrder> => {
     const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
@@ -78,11 +79,11 @@ export class OrderService {
 
   public getOrders = async (
     user: IUser,
-    query: GetOrdersQueryInput
+    query: GetOrdersQueryInput,
   ): Promise<IOrderPagination> => {
     const pagination = await this.orderRepository.findAllPaginated(
       user._id,
-      query
+      query,
     );
     return pagination;
   };
@@ -90,7 +91,7 @@ export class OrderService {
   public updateOrder = async (
     orderId: Types.ObjectId,
     user: IUser,
-    data: UpdateOrderInput
+    data: UpdateOrderInput,
   ): Promise<IOrder> => {
     const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
@@ -100,7 +101,7 @@ export class OrderService {
     const services: IService[] | undefined = data.services?.map(
       (service: Partial<IService>) => {
         const serviceFound = order.services.find((s) =>
-          s._id.equals(service._id)
+          s._id.equals(service._id),
         );
         if (!serviceFound) {
           throw new NotFoundError("Service not found");
@@ -109,7 +110,7 @@ export class OrderService {
           ...serviceFound,
           ...service,
         };
-      }
+      },
     );
 
     if (!services) {
@@ -118,11 +119,11 @@ export class OrderService {
 
     const totalValue = services.reduce(
       (acc: number, service: IService) => acc + service.value,
-      0
+      0,
     );
     if (totalValue <= 0) {
       throw new BadRequestError(
-        "Total value of services must be greater than 0"
+        "Total value of services must be greater than 0",
       );
     }
 
@@ -135,12 +136,12 @@ export class OrderService {
 
     if (orderData.stage !== order.stage) {
       const allowedTransition = ALLOWED_ORDER_STAGE_TRANSITIONS.find(
-        (transition) => transition.from === order.stage
+        (transition) => transition.from === order.stage,
       )?.to.includes(orderData.stage);
 
       if (!allowedTransition) {
         throw new BadRequestError(
-          `Cannot transition from ${order.stage} to ${orderData.stage}`
+          `Cannot transition from ${order.stage} to ${orderData.stage}`,
         );
       }
     }
@@ -155,7 +156,7 @@ export class OrderService {
 
   public advanceOrderStage = async (
     orderId: Types.ObjectId,
-    user: IUser
+    user: IUser,
   ): Promise<IOrder> => {
     const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
@@ -186,7 +187,7 @@ export class OrderService {
   public createService = async (
     orderId: Types.ObjectId,
     user: IUser,
-    data: CreateServiceInput
+    data: CreateServiceInput,
   ): Promise<IService> => {
     const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
@@ -203,7 +204,7 @@ export class OrderService {
 
     const createdService = await this.orderRepository.createService(
       orderId,
-      service
+      service,
     );
     return createdService;
   };
@@ -212,7 +213,7 @@ export class OrderService {
     orderId: Types.ObjectId,
     serviceId: Types.ObjectId,
     user: IUser,
-    data: UpdateServiceInput
+    data: UpdateServiceInput,
   ): Promise<IService> => {
     const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
@@ -233,7 +234,7 @@ export class OrderService {
     const updatedService = await this.orderRepository.updateService(
       orderId,
       serviceId,
-      service
+      service,
     );
     return updatedService;
   };

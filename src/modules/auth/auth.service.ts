@@ -1,18 +1,18 @@
 import { InternalServerError, UnauthorizedError } from "../../shared/app-error";
 import { JwtService } from "../../shared/jwt-service";
 import { PasswordHash } from "../../shared/password-hash";
-import { RegisterInput, LoginInput } from "./auth.schema";
 import { UserService } from "../users/user.service";
-import { IUserRepository, IUserSafe, IUser } from "../users/user.type";
+import { IUser, IUserRepository, IUserSafe } from "../users/user.type";
+import { LoginInput, RegisterInput } from "./auth.schema";
 
 export class AuthService {
   constructor(
     private readonly userRepository: IUserRepository,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   public registerUser = async (
-    user: RegisterInput
+    user: RegisterInput,
   ): Promise<{ token: string; user: IUserSafe }> => {
     const userCreated = await this.userService.createUser(user);
 
@@ -25,7 +25,7 @@ export class AuthService {
   };
 
   public loginUser = async (
-    user: LoginInput
+    user: LoginInput,
   ): Promise<{ token: string; user: Omit<IUser, "password"> }> => {
     const userFound = await this.userRepository.findByEmail(user.email);
     if (!userFound) {

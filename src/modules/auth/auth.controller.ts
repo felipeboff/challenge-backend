@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+
+import { HttpResponse } from "../../shared/http-response";
 import { LoginSchema, RegisterSchema } from "./auth.schema";
 import { AuthService } from "./auth.service";
-import { HttpResponse } from "../../shared/http-response";
 
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

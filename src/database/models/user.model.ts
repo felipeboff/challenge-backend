@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 import { IUser } from "../../modules/users/user.type";
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -15,7 +16,7 @@ const userSchema = new mongoose.Schema<IUser>(
   {
     timestamps: true,
     versionKey: false,
-  }
+  },
 );
 
 export const UserModel = mongoose.model<IUser>("User", userSchema);

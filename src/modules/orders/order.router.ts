@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { OrderController } from "./order.controller";
-import { OrderService } from "./order.service";
-import { OrderRepository } from "./order.repository";
+
 import { OrderModel } from "../../database/models/order.model";
+import { OrderController } from "./order.controller";
+import { OrderRepository } from "./order.repository";
+import { OrderService } from "./order.service";
 
 const router = Router();
 

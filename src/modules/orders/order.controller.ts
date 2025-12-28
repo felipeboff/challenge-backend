@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { OrderService } from "./order.service";
+
+import { BadRequestError } from "../../shared/app-error";
+import { HttpResponse } from "../../shared/http-response";
+import { transformObjectId } from "../../shared/transform-object-id";
 import {
   CreateOrderSchema,
   CreateServiceSchema,
@@ -7,9 +10,7 @@ import {
   UpdateOrderSchema,
   UpdateServiceSchema,
 } from "./order.schema";
-import { BadRequestError } from "../../shared/app-error";
-import { transformObjectId } from "../../shared/transform-object-id";
-import { HttpResponse } from "../../shared/http-response";
+import { OrderService } from "./order.service";
 
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
@@ -101,7 +102,7 @@ export class OrderController {
       orderId,
       serviceId,
       user,
-      data
+      data,
     );
 
     return HttpResponse.ok(res, service);

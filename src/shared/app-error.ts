@@ -19,7 +19,7 @@ export class AppError extends Error {
     message: string,
     statusCode: StatusCodeError = StatusCodeError.INTERNAL_SERVER_ERROR,
     details?: ErrorDetails,
-    isOperational = true
+    isOperational = true,
   ) {
     super(message);
     this.name = "AppError";

@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express";
+import { Types } from "mongoose";
+
+import { UserModel } from "../database/models/user.model";
 import { UnauthorizedError } from "../shared/app-error";
 import { JwtService } from "../shared/jwt-service";
-import { Types } from "mongoose";
-import { UserModel } from "../database/models/user.model";
 
 export const authMiddleware = async (
   req: Request,
   _: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
@@ -33,7 +34,7 @@ export const authMiddleware = async (
 export const authMiddlewareCleaner = (
   req: Request,
   _: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   delete req.authContext;
   next();

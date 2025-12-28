@@ -1,7 +1,8 @@
-import { IUserRepository } from "./user.type";
 import { Types } from "mongoose";
-import { IUser } from "./user.type";
+
 import { UserModel } from "../../database/models/user.model";
+import { IUserRepository } from "./user.type";
+import { IUser } from "./user.type";
 
 export class UserRepository implements IUserRepository {
   constructor(private readonly userModel: typeof UserModel) {}

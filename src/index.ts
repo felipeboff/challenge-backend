@@ -1,6 +1,6 @@
-import { database } from "./database/database";
-import { env } from "./config/env";
 import app from "./app";
+import { env } from "./config/env";
+import { database } from "./database/database";
 
 // Connect to database when starting the application
 async function startServer() {
