@@ -22,35 +22,39 @@ async function setupTestDatabase(): Promise<void> {
 }
 
 async function teardownTestDatabase(): Promise<void> {
-  const db = mongoose.connection.db;
-  if (!db || !db.databaseName || db.databaseName !== env.MONGO_DB_TEST) {
-    throw new Error("Database name is not correct");
-  }
+  // const db = mongoose.connection.db;
+  // if (!db || !db.databaseName || db.databaseName !== env.MONGO_DB_TEST) {
+  //   throw new Error("Database name is not correct");
+  // }
 
-  await db.dropDatabase();
+  // await db.dropDatabase();
   await mongoose.connection.close();
   await database.clearConnection();
 }
 
-async function cleanupDatabase(): Promise<void> {
-  const db = mongoose.connection.db;
-  if (!db || !db.databaseName || db.databaseName !== env.MONGO_DB_TEST) {
-    throw new Error("Database name is not correct");
-  }
+// async function cleanupDatabase(): Promise<void> {
+//   const db = mongoose.connection.db;
+//   if (!db || !db.databaseName || db.databaseName !== env.MONGO_DB_TEST) {
+//     throw new Error("Database name is not correct");
+//   }
 
-  await db.dropDatabase();
-}
+//   await db.dropDatabase();
+// }
 
 beforeAll(async () => {
   await setupTestDatabase();
 });
 
 afterEach(async () => {
-  await cleanupDatabase();
+  // await cleanupDatabase();
 });
 
 afterAll(async () => {
   await teardownTestDatabase();
 });
 
-export { cleanupDatabase, setupTestDatabase, teardownTestDatabase };
+export {
+  // cleanupDatabase,
+  setupTestDatabase,
+  teardownTestDatabase,
+};
