@@ -2,15 +2,14 @@ import { Types } from "mongoose";
 import { GetOrdersInput } from "./order.schema";
 
 export enum ENUMOrderStatus {
-  PENDING = "pending",
-  COMPLETED = "completed",
-  CANCELLED = "cancelled",
+  ACTIVE = "active",
+  DELETED = "deleted",
 }
 
 export enum ENUMOrderStage {
+  CREATED = "created",
   ANALYSIS = "analysis",
-  REVIEW = "review",
-  APPROVED = "approved",
+  COMPLETED = "completed",
 }
 
 export interface IOrder {
@@ -51,17 +50,17 @@ export const ALLOWED_ORDER_STAGE_TRANSITIONS: {
   to: ENUMOrderStage[];
 }[] = [
   {
-    from: ENUMOrderStage.ANALYSIS,
-    to: [ENUMOrderStage.REVIEW],
+    from: ENUMOrderStage.CREATED,
+    to: [ENUMOrderStage.ANALYSIS],
   },
   {
-    from: ENUMOrderStage.REVIEW,
-    to: [ENUMOrderStage.APPROVED],
+    from: ENUMOrderStage.ANALYSIS,
+    to: [ENUMOrderStage.COMPLETED],
   },
 ];
 
 export const ORDER_STAGE_SEQUENCE: Record<number, ENUMOrderStage> = {
-  0: ENUMOrderStage.ANALYSIS,
-  1: ENUMOrderStage.REVIEW,
-  2: ENUMOrderStage.APPROVED,
+  0: ENUMOrderStage.CREATED,
+  1: ENUMOrderStage.ANALYSIS,
+  2: ENUMOrderStage.COMPLETED,
 };

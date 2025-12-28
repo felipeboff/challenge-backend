@@ -31,8 +31,8 @@ export class OrderService {
       ...order,
       _id: new Types.ObjectId(),
       userId: user._id,
-      stage: ENUMOrderStage.ANALYSIS,
-      status: ENUMOrderStatus.PENDING,
+      stage: ENUMOrderStage.CREATED,
+      status: ENUMOrderStatus.ACTIVE,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
