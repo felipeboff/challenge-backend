@@ -5,7 +5,7 @@ import {
   ENUMServiceStatus,
 } from "./order.type";
 import { Types } from "mongoose";
-import { ObjectIdSchema } from "../../shared/object-id-schema";
+import { transformObjectId } from "../../shared/transform-object-id";
 
 export const CreateServiceSchema = z
   .object({
@@ -22,7 +22,9 @@ export type CreateServiceInput = z.infer<typeof CreateServiceSchema>;
 export const UpdateServiceSchema = z
   .object({
     _id: z
-      .custom<Types.ObjectId>(ObjectIdSchema, { message: "Invalid Service ID" })
+      .custom<Types.ObjectId>(transformObjectId, {
+        message: "Invalid Service ID",
+      })
       .optional(),
     name: z
       .string()
@@ -69,10 +71,14 @@ export type CreateOrderInput = z.infer<typeof CreateOrderSchema>;
 export const UpdateOrderSchema = z
   .object({
     _id: z
-      .custom<Types.ObjectId>(ObjectIdSchema, { message: "Invalid Order ID" })
+      .custom<Types.ObjectId>(transformObjectId, {
+        message: "Invalid Order ID",
+      })
       .optional(),
     userId: z
-      .custom<Types.ObjectId>(ObjectIdSchema, { message: "Invalid User ID" })
+      .custom<Types.ObjectId>(transformObjectId, {
+        message: "Invalid User ID",
+      })
       .optional(),
     stage: z
       .enum(ENUMOrderStage, { message: "Invalid Order Stage" })

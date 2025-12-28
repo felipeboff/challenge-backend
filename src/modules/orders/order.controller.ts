@@ -8,7 +8,7 @@ import {
   UpdateServiceSchema,
 } from "./order.schema";
 import { BadRequestError } from "../../shared/app-error";
-import { toObjectId } from "../../shared/object-id-utils";
+import { transformObjectId } from "../../shared/transform-object-id";
 import { HttpResponse } from "../../shared/http-response";
 
 export class OrderController {
@@ -35,7 +35,7 @@ export class OrderController {
   public getOrderById = async (req: Request, res: Response) => {
     const user = req.authContext!.user;
 
-    const orderId = toObjectId(req.params.orderId);
+    const orderId = transformObjectId(req.params.orderId);
     if (!orderId) {
       throw new BadRequestError("Invalid order ID");
     }
@@ -47,7 +47,7 @@ export class OrderController {
   public updateOrder = async (req: Request, res: Response) => {
     const user = req.authContext!.user;
 
-    const orderId = toObjectId(req.params.orderId);
+    const orderId = transformObjectId(req.params.orderId);
     if (!orderId) {
       throw new BadRequestError("Invalid order ID");
     }
@@ -60,7 +60,7 @@ export class OrderController {
   public advanceOrderStage = async (req: Request, res: Response) => {
     const user = req.authContext!.user;
 
-    const orderId = toObjectId(req.params.orderId);
+    const orderId = transformObjectId(req.params.orderId);
     if (!orderId) {
       throw new BadRequestError("Invalid order ID");
     }
@@ -72,7 +72,7 @@ export class OrderController {
   public createService = async (req: Request, res: Response) => {
     const user = req.authContext!.user;
 
-    const orderId = toObjectId(req.params.orderId);
+    const orderId = transformObjectId(req.params.orderId);
     if (!orderId) {
       throw new BadRequestError("Invalid order ID");
     }
@@ -86,12 +86,12 @@ export class OrderController {
   public updateService = async (req: Request, res: Response) => {
     const user = req.authContext!.user;
 
-    const orderId = toObjectId(req.params.orderId);
+    const orderId = transformObjectId(req.params.orderId);
     if (!orderId) {
       throw new BadRequestError("Invalid order ID");
     }
 
-    const serviceId = toObjectId(req.params.serviceId);
+    const serviceId = transformObjectId(req.params.serviceId);
     if (!serviceId) {
       throw new BadRequestError("Invalid service ID");
     }
