@@ -11,7 +11,6 @@ export enum ENUMOrderStage {
   ANALYSIS = "analysis",
   REVIEW = "review",
   APPROVED = "approved",
-  REJECTED = "rejected",
 }
 
 export interface IOrder {
@@ -39,9 +38,30 @@ export interface IOrderPagination {
 
 export interface IOrderRepository {
   create(order: IOrder): Promise<IOrder>;
+  update(id: Types.ObjectId, data: IOrder): Promise<IOrder | null>;
   findById(id: Types.ObjectId): Promise<IOrder | null>;
   findAll(
     userId: Types.ObjectId,
     query: GetOrdersInput
   ): Promise<IOrderPagination>;
 }
+
+export const ALLOWED_ORDER_STAGE_TRANSITIONS: {
+  from: ENUMOrderStage;
+  to: ENUMOrderStage[];
+}[] = [
+  {
+    from: ENUMOrderStage.ANALYSIS,
+    to: [ENUMOrderStage.REVIEW],
+  },
+  {
+    from: ENUMOrderStage.REVIEW,
+    to: [ENUMOrderStage.APPROVED],
+  },
+];
+
+export const ORDER_STAGE_SEQUENCE: Record<number, ENUMOrderStage> = {
+  0: ENUMOrderStage.ANALYSIS,
+  1: ENUMOrderStage.REVIEW,
+  2: ENUMOrderStage.APPROVED,
+};

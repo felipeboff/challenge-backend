@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { OrderService } from "./order.service";
-import { CreateOrderSchema, GetOrdersSchema } from "./order.schema";
+import {
+  CreateOrderSchema,
+  GetOrdersSchema,
+  UpdateOrderSchema,
+} from "./order.schema";
 import { BadRequestError } from "../../shared/app-error";
 import { toObjectId } from "../../shared/object-id-utils";
 import { HttpResponse } from "../../shared/http-response";
@@ -35,6 +39,30 @@ export class OrderController {
     }
 
     const order = await this.orderService.getOrderById(id, user);
+    return HttpResponse.ok(res, order);
+  };
+
+  public updateOrder = async (req: Request, res: Response) => {
+    const user = req.authContext!.user;
+
+    const id = toObjectId(req.params.id);
+    if (!id) {
+      throw new BadRequestError("Invalid order ID");
+    }
+
+    const data = UpdateOrderSchema.parse(req.body);
+    const order = await this.orderService.updateOrder(id, user, data);
+    return HttpResponse.ok(res, order);
+  };
+
+  public advanceOrderStage = async (req: Request, res: Response) => {
+    const user = req.authContext!.user;
+    const id = toObjectId(req.params.id);
+    if (!id) {
+      throw new BadRequestError("Invalid order ID");
+    }
+
+    const order = await this.orderService.advanceOrderStage(id, user);
     return HttpResponse.ok(res, order);
   };
 }

@@ -13,5 +13,7 @@ const orderController = new OrderController(orderService);
 router.post("/", orderController.createOrder);
 router.get("/", orderController.getOrders);
 router.get("/:id", orderController.getOrderById);
+router.put("/:id", orderController.updateOrder);
+router.post("/:id/advance", orderController.advanceOrderStage);
 
 export default router;

@@ -17,6 +17,16 @@ export class OrderRepository implements IOrderRepository {
     return result;
   };
 
+  public update = async (
+    id: Types.ObjectId,
+    data: IOrder
+  ): Promise<IOrder | null> => {
+    const result = await this.orderModel
+      .findByIdAndUpdate(id, data, { new: true })
+      .lean();
+    return result;
+  };
+
   public findAll = async (
     userId: Types.ObjectId,
     query: GetOrdersInput
