@@ -17,116 +17,128 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   public createOrder = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response
   ): Promise<Response<IOrder>> => {
-    const user = req.authContext!.user;
+    const user = request.authContext!.user;
 
-    const data = CreateOrderSchema.parse(req.body);
+    const body = CreateOrderSchema.parse(request.body);
 
-    const order = await this.orderService.createOrder(data, user);
-    return HttpResponse.created(res, order);
+    const order = await this.orderService.createOrder(body, user);
+    return HttpResponse.created(response, order);
   };
 
   public getOrders = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response
   ): Promise<Response<IOrderPagination>> => {
-    const user = req.authContext!.user;
+    const user = request.authContext!.user;
 
-    const query = GetOrdersQuerySchema.parse(req.query);
+    const query = GetOrdersQuerySchema.parse(request.query);
 
-    const orders = await this.orderService.getOrders(user, query);
-    return HttpResponse.ok(res, orders);
+    const order = await this.orderService.getOrders(user, query);
+    return HttpResponse.ok(response, order);
   };
 
   public getOrderById = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response
   ): Promise<Response<IOrder>> => {
-    const user = req.authContext!.user;
+    const user = request.authContext!.user;
 
-    const orderId = transformObjectId(req.params.orderId);
+    const orderId = transformObjectId(request.params.orderId);
     if (!orderId) {
-      throw new BadRequestError("Invalid order ID");
+      throw new BadRequestError("Invalid order ID", {
+        origin: this.getOrderById.name,
+      });
     }
 
     const order = await this.orderService.getOrderById(orderId, user);
-    return HttpResponse.ok(res, order);
+    return HttpResponse.ok(response, order);
   };
 
   public updateOrder = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response
   ): Promise<Response<IOrder>> => {
-    const user = req.authContext!.user;
+    const user = request.authContext!.user;
 
-    const orderId = transformObjectId(req.params.orderId);
+    const orderId = transformObjectId(request.params.orderId);
     if (!orderId) {
-      throw new BadRequestError("Invalid order ID");
+      throw new BadRequestError("Invalid order ID", {
+        origin: this.updateOrder.name,
+      });
     }
 
-    const data = UpdateOrderSchema.parse(req.body);
+    const data = UpdateOrderSchema.parse(request.body);
     const order = await this.orderService.updateOrder(orderId, user, data);
-    return HttpResponse.ok(res, order);
+    return HttpResponse.ok(response, order);
   };
 
   public advanceOrderStage = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response
   ): Promise<Response<IOrder>> => {
-    const user = req.authContext!.user;
+    const user = request.authContext!.user;
 
-    const orderId = transformObjectId(req.params.orderId);
+    const orderId = transformObjectId(request.params.orderId);
     if (!orderId) {
-      throw new BadRequestError("Invalid order ID");
+      throw new BadRequestError("Invalid order ID", {
+        origin: this.advanceOrderStage.name,
+      });
     }
 
     const order = await this.orderService.advanceOrderStage(orderId, user);
-    return HttpResponse.ok(res, order);
+    return HttpResponse.ok(response, order);
   };
 
   public createService = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response
   ): Promise<Response<IOrderService>> => {
-    const user = req.authContext!.user;
+    const user = request.authContext!.user;
 
-    const orderId = transformObjectId(req.params.orderId);
+    const orderId = transformObjectId(request.params.orderId);
     if (!orderId) {
-      throw new BadRequestError("Invalid order ID");
+      throw new BadRequestError("Invalid order ID", {
+        origin: this.createService.name,
+      });
     }
 
-    const data = CreateServiceSchema.parse(req.body);
+    const data = CreateServiceSchema.parse(request.body);
     const service = await this.orderService.createService(orderId, user, data);
 
-    return HttpResponse.created(res, service);
+    return HttpResponse.created(response, service);
   };
 
   public updateService = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response
   ): Promise<Response<IOrderService>> => {
-    const user = req.authContext!.user;
+    const user = request.authContext!.user;
 
-    const orderId = transformObjectId(req.params.orderId);
+    const orderId = transformObjectId(request.params.orderId);
     if (!orderId) {
-      throw new BadRequestError("Invalid order ID");
+      throw new BadRequestError("Invalid order ID", {
+        origin: "OrderController.updateService",
+      });
     }
 
-    const serviceId = transformObjectId(req.params.serviceId);
+    const serviceId = transformObjectId(request.params.serviceId);
     if (!serviceId) {
-      throw new BadRequestError("Invalid service ID");
+      throw new BadRequestError("Invalid service ID", {
+        origin: "OrderController.updateService",
+      });
     }
 
-    const data = UpdateServiceSchema.parse(req.body);
+    const data = UpdateServiceSchema.parse(request.body);
     const service = await this.orderService.updateService(
       orderId,
       serviceId,
       user,
-      data,
+      data
     );
 
-    return HttpResponse.ok(res, service);
+    return HttpResponse.ok(response, service);
   };
 }

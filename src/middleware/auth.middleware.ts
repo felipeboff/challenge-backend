@@ -6,29 +6,42 @@ import { UnauthorizedError } from "../shared/app-error";
 import { JwtService } from "../shared/jwt-service";
 
 export const authMiddleware = async (
-  req: Request,
+  request: Request,
   _res: Response,
   next: NextFunction
 ): Promise<void> => {
   void _res;
 
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = request.headers.authorization?.split(" ")[1];
   if (!token) {
-    throw new UnauthorizedError("Unauthorized");
+    throw new UnauthorizedError("Unauthorized", {
+      origin: "AuthMiddleware.authMiddleware",
+      path: request.path,
+      message: "No token provided",
+    });
   }
 
   const decoded = JwtService.verify(token);
   if (!decoded) {
-    throw new UnauthorizedError("Unauthorized");
+    throw new UnauthorizedError("Unauthorized", {
+      origin: "AuthMiddleware.authMiddleware",
+      path: request.path,
+      message: "Invalid token",
+    });
   }
 
   const userId = decoded.userId ? new Types.ObjectId(decoded.userId) : null;
   const user = userId ? await UserModel.findById(userId) : null;
   if (!user) {
-    throw new UnauthorizedError("Unauthorized");
+    throw new UnauthorizedError("Unauthorized", {
+      origin: "AuthMiddleware.authMiddleware",
+      path: request.path,
+      message: "User not found",
+      userId: decoded.userId,
+    });
   }
 
-  req.authContext = { user: user.toObject() };
+  request.authContext = { user: user.toObject() };
 
   next();
 };

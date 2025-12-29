@@ -8,7 +8,7 @@ export enum StatusCodeError {
   INTERNAL_SERVER_ERROR = 500,
 }
 
-export type ErrorDetails = Record<string, unknown> | undefined;
+export type ErrorDetails = Record<string, unknown>;
 
 export class AppError extends Error {
   public readonly statusCode: StatusCodeError;

@@ -1,11 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
 
 export const cleanupMiddleware = (
-  req: Request,
+  request: Request,
   _: Response,
   next: NextFunction
 ): void => {
-  if (req.requestId) delete req.requestId;
-  if (req.authContext) delete req.authContext;
+  if (request.authContext) delete request.authContext;
   next();
 };

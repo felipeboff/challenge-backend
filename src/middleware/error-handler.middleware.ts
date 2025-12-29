@@ -6,8 +6,8 @@ import { logger } from "../shared/logger";
 
 export const ErrorHandlerMiddleware = (
   error: unknown,
-  req: Request,
-  res: Response,
+  request: Request,
+  response: Response,
   _next: NextFunction
 ): Response<{ error: string }> => {
   void _next;
@@ -15,16 +15,14 @@ export const ErrorHandlerMiddleware = (
   if (error instanceof AppError) {
     logger.warn("Application error", {
       details: {
-        requestId: req.requestId,
         statusCode: error.statusCode,
         message: error.message,
-        path: req.path,
-        method: req.method,
-        details: error.details,
+        path: request.path,
+        method: request.method,
+        ...(error.details && { details: error.details }),
       },
     });
-    return res.status(error.statusCode).json({
-      requestId: req.requestId,
+    return response.status(error.statusCode).json({
       error: error.message,
     });
   }
@@ -33,30 +31,28 @@ export const ErrorHandlerMiddleware = (
     logger.warn("Validation error", {
       error,
       details: {
-        requestId: req.requestId,
         statusCode: StatusCodeError.BAD_REQUEST,
-        path: req.path,
-        method: req.method,
+        path: request.path,
+        method: request.method,
+        issues: error.issues,
       },
     });
-    return res.status(StatusCodeError.BAD_REQUEST).json({
-      requestId: req.requestId,
-      error: error.issues.map((issue) => issue.message).join(", "),
+    return response.status(StatusCodeError.BAD_REQUEST).json({
+      issues: error.issues,
     });
   }
 
   logger.error("Unhandled error", {
     error,
     details: {
-      requestId: req.requestId,
-      path: req.path,
-      method: req.method,
+      path: request.path,
+      method: request.method,
     },
   });
 
   const errorMessage =
     error instanceof Error ? error.message : "Internal server error";
-  return res
+  return response
     .status(StatusCodeError.INTERNAL_SERVER_ERROR)
-    .json({ requestId: req.requestId, error: errorMessage });
+    .json({ error: errorMessage });
 };

@@ -9,20 +9,20 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   public register = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response
   ): Promise<Response<IAuthUser>> => {
-    const data = RegisterSchema.parse(req.body);
-    const result = await this.authService.registerUser(data);
-    return HttpResponse.created(res, result);
+    const body = RegisterSchema.parse(request.body);
+    const data = await this.authService.registerUser(body);
+    return HttpResponse.created(response, data);
   };
 
   public login = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response
   ): Promise<Response<IAuthUser>> => {
-    const data = LoginSchema.parse(req.body);
-    const result = await this.authService.loginUser(data);
-    return HttpResponse.ok(res, result);
+    const body = LoginSchema.parse(request.body);
+    const data = await this.authService.loginUser(body);
+    return HttpResponse.ok(response, data);
   };
 }

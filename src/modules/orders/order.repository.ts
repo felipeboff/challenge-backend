@@ -20,21 +20,23 @@ export class OrderRepository {
 
   public createService = async (
     orderId: Types.ObjectId,
-    service: IOrderService,
+    service: IOrderService
   ): Promise<IOrderService> => {
     const result = await this.orderModel
       .findByIdAndUpdate(
         orderId,
         { $push: { services: service } },
-        { new: true },
+        { new: true }
       )
       .lean();
 
     const createdService = result?.services.find((s) =>
-      s._id.equals(service._id),
+      s._id.equals(service._id)
     );
     if (!createdService) {
-      throw new NotFoundError("Service not found");
+      throw new NotFoundError("Service not found", {
+        origin: "OrderRepository.createService",
+      });
     }
 
     return createdService;
@@ -42,7 +44,7 @@ export class OrderRepository {
 
   public update = async (
     orderId: Types.ObjectId,
-    data: IOrder,
+    data: IOrder
   ): Promise<IOrder | null> => {
     const result = await this.orderModel
       .findByIdAndUpdate(orderId, data, { new: true })
@@ -52,7 +54,7 @@ export class OrderRepository {
 
   public findAllPaginated = async (
     userId: Types.ObjectId,
-    query: GetOrdersQueryInput,
+    query: GetOrdersQueryInput
   ): Promise<IOrderPagination> => {
     const filter: { userId: Types.ObjectId; stage?: string } = { userId };
     if (query.stage) {
@@ -83,7 +85,7 @@ export class OrderRepository {
   public updateService = async (
     orderId: Types.ObjectId,
     serviceId: Types.ObjectId,
-    service: IOrderService,
+    service: IOrderService
   ): Promise<IOrderService> => {
     const result = await this.orderModel
       .findByIdAndUpdate(
@@ -92,15 +94,17 @@ export class OrderRepository {
         {
           new: true,
           arrayFilters: [{ "elem._id": serviceId }],
-        },
+        }
       )
       .lean();
 
     const updatedService = result?.services.find((s) =>
-      s._id.equals(serviceId),
+      s._id.equals(serviceId)
     );
     if (!updatedService) {
-      throw new NotFoundError("Service not found");
+      throw new NotFoundError("Service not found", {
+        origin: "OrderRepository.updateService",
+      });
     }
 
     return updatedService;

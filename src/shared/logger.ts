@@ -10,25 +10,22 @@ interface ILogger {
   error?: unknown;
 }
 
-const NODE_ENV = process.env.NODE_ENV;
 const LOG_LEVEL = process.env.LOG_LEVEL;
 
-if (!LOG_LEVEL || !NODE_ENV) {
-  throw new Error("LOG_LEVEL and NODE_ENV are required");
+if (!LOG_LEVEL) {
+  throw new Error("LOG_LEVEL is required");
 }
 
 const pinoLogger = pino({
   level: LOG_LEVEL,
-  ...(NODE_ENV === "development" && {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        colorize: true,
-        translateTime: "HH:MM:ss Z",
-        ignore: "pid,hostname",
-      },
+  transport: {
+    target: "pino-pretty",
+    options: {
+      colorize: true,
+      translateTime: "yyyy-mm-dd HH:MM:ss.l o",
+      ignore: "pid,hostname",
     },
-  }),
+  },
 });
 
 class Logger {
