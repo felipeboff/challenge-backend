@@ -1,10 +1,10 @@
 import express from "express";
 
-import { authMiddleware } from "./middleware/auth.middleware";
 import { cleanupMiddleware } from "./middleware/cleanup.middleware";
 import { ErrorHandlerMiddleware } from "./middleware/error-handler.middleware";
 import authRouter from "./modules/auth/auth.router";
 import orderRouter from "./modules/orders/order.router";
+import { authMiddleware } from "./middleware/auth.middleware";
 
 // Express application
 const app = express();

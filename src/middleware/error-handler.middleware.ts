@@ -9,9 +9,9 @@ export const ErrorHandlerMiddleware = (
   error: unknown,
   request: Request,
   response: Response,
-  _next: NextFunction
+  next: NextFunction
 ): Response<{ error: string }> => {
-  void _next;
+  void next;
 
   if (error instanceof AppError) {
     logger.warn("Application error", {
@@ -58,9 +58,20 @@ export const ErrorHandlerMiddleware = (
         error: "Service unavailable",
       });
     }
+    logger.error("Error not handled", {
+      error,
+      details: {
+        path: request.path,
+        method: request.method,
+      },
+    });
+
+    return response
+      .status(StatusCodeError.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 
-  logger.error("Unhandled error", {
+  logger.error("Unknown error", {
     error,
     details: {
       path: request.path,
@@ -68,9 +79,7 @@ export const ErrorHandlerMiddleware = (
     },
   });
 
-  const errorMessage =
-    error instanceof Error ? error.message : "Internal server error";
   return response
     .status(StatusCodeError.INTERNAL_SERVER_ERROR)
-    .json({ error: errorMessage });
+    .json({ error: "Unknown error" });
 };

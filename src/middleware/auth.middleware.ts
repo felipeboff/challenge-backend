@@ -4,6 +4,9 @@ import { Types } from "mongoose";
 import { UserModel } from "../database/models/user.model";
 import { UnauthorizedError } from "../shared/app-error";
 import { JwtService } from "../shared/jwt-service";
+import { UserRepository } from "../modules/users/user.repository";
+
+const userRepository = new UserRepository(UserModel);
 
 export const authMiddleware = async (
   request: Request,
@@ -31,7 +34,7 @@ export const authMiddleware = async (
   }
 
   const userId = decoded.userId ? new Types.ObjectId(decoded.userId) : null;
-  const user = userId ? await UserModel.findById(userId) : null;
+  const user = userId ? await userRepository.findById(userId) : null;
   if (!user) {
     throw new UnauthorizedError("Unauthorized", {
       origin: "AuthMiddleware.authMiddleware",
@@ -41,7 +44,7 @@ export const authMiddleware = async (
     });
   }
 
-  request.authContext = { user: user.toObject() };
+  request.authContext = { user };
 
   next();
 };

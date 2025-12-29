@@ -9,20 +9,26 @@ export interface IUserDocument extends Omit<IUser, "id"> {
 }
 
 export const toDocumentUser = (user: IUser): IUserDocument => {
-  const { id: _id, ...rest } = user;
   return {
-    ...rest,
-    _id,
+    _id: user.id,
+    email: user.email,
+    password: user.password,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   };
 };
 
 export const toObjectUser = (user: unknown): IUser => {
-  const { _id: id, ...rest } = user as IUserDocument;
+  const _user = user as IUserDocument;
   return {
-    ...rest,
-    id,
+    id: _user._id,
+    email: _user.email,
+    password: _user.password,
+    createdAt: _user.createdAt,
+    updatedAt: _user.updatedAt,
   };
 };
+
 export class UserRepository {
   constructor(private readonly userModel: typeof UserModel) {}
 

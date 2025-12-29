@@ -16,38 +16,60 @@ export interface IOrderServiceDocument extends Omit<IOrderService, "id"> {
 }
 
 export const toDocumentOrder = (order: IOrder): IOrderDocument => {
-  const { id: _id, ...rest } = order;
   return {
-    ...rest,
-    services: rest.services.map(toDocumentService),
-    _id,
+    _id: order.id,
+    labName: order.labName,
+    patientName: order.patientName,
+    clinicName: order.clinicName,
+    stage: order.stage,
+    status: order.status,
+    userId: order.userId,
+    services: order.services.map(toDocumentService),
+    expiresAt: order.expiresAt,
+    createdAt: order.createdAt,
+    updatedAt: order.updatedAt,
   };
 };
 
 export const toObjectOrder = (order: unknown): IOrder => {
-  const { _id: id, ...rest } = order as IOrderDocument;
+  const _order = order as IOrderDocument;
   return {
-    ...rest,
-    services: rest.services.map(toObjectService),
-    id,
+    id: _order._id,
+    labName: _order.labName,
+    patientName: _order.patientName,
+    clinicName: _order.clinicName,
+    stage: _order.stage,
+    status: _order.status,
+    userId: _order.userId,
+    services: _order.services.map(toObjectService),
+    expiresAt: _order.expiresAt,
+    createdAt: _order.createdAt,
+    updatedAt: _order.updatedAt,
   };
 };
 
 export const toDocumentService = (
   service: IOrderService
 ): IOrderServiceDocument => {
-  const { id: _id, ...rest } = service;
   return {
-    ...rest,
-    _id,
+    _id: service.id,
+    name: service.name,
+    value: service.value,
+    status: service.status,
+    createdAt: service.createdAt,
+    updatedAt: service.updatedAt,
   };
 };
 
 export const toObjectService = (service: unknown): IOrderService => {
-  const { _id: id, ...rest } = service as IOrderServiceDocument;
+  const _service = service as IOrderServiceDocument;
   return {
-    ...rest,
-    id,
+    id: _service._id,
+    name: _service.name,
+    value: _service.value,
+    status: _service.status,
+    createdAt: _service.createdAt,
+    updatedAt: _service.updatedAt,
   };
 };
 
