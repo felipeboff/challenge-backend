@@ -2,7 +2,11 @@ import { type Model, Types } from "mongoose";
 
 import { NotFoundError } from "../../shared/app-error";
 import type { GetOrdersQueryInput } from "./order.schema";
-import type { IOrderPagination, IOrderService } from "./order.type";
+import type {
+  ENUMOrderServiceStatus,
+  IOrderPagination,
+  IOrderService,
+} from "./order.type";
 import type { IOrder } from "./order.type";
 
 export class OrderRepository {
@@ -13,8 +17,14 @@ export class OrderRepository {
     return result.toObject();
   };
 
-  public findById = async (orderId: Types.ObjectId): Promise<IOrder | null> => {
+  public findById = async (orderId: Types.ObjectId): Promise<IOrder> => {
     const result = await this.orderModel.findById(orderId).lean();
+    if (!result) {
+      throw new NotFoundError("Order not found", {
+        origin: "OrderRepository.findById",
+      });
+    }
+
     return result;
   };
 
@@ -45,10 +55,17 @@ export class OrderRepository {
   public update = async (
     orderId: Types.ObjectId,
     data: IOrder
-  ): Promise<IOrder | null> => {
+  ): Promise<IOrder> => {
     const result = await this.orderModel
       .findByIdAndUpdate(orderId, data, { new: true })
       .lean();
+
+    if (!result) {
+      throw new NotFoundError("Order not found", {
+        origin: "OrderRepository.update",
+      });
+    }
+
     return result;
   };
 
@@ -88,19 +105,23 @@ export class OrderRepository {
     service: IOrderService
   ): Promise<IOrderService> => {
     const result = await this.orderModel
-      .findByIdAndUpdate(
-        orderId,
+      .findOneAndUpdate(
+        { _id: orderId, "services._id": serviceId },
         { $set: { "services.$[elem]": service } },
         {
-          new: true,
           arrayFilters: [{ "elem._id": serviceId }],
+          new: true,
         }
       )
       .lean();
 
-    const updatedService = result?.services.find((s) =>
-      s._id.equals(serviceId)
-    );
+    if (!result) {
+      throw new NotFoundError("Order or Service not found", {
+        origin: "OrderRepository.updateService",
+      });
+    }
+
+    const updatedService = result.services.find((s) => s._id.equals(serviceId));
     if (!updatedService) {
       throw new NotFoundError("Service not found", {
         origin: "OrderRepository.updateService",

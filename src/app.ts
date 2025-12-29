@@ -3,7 +3,6 @@ import express from "express";
 import { authMiddleware } from "./middleware/auth.middleware";
 import { cleanupMiddleware } from "./middleware/cleanup.middleware";
 import { ErrorHandlerMiddleware } from "./middleware/error-handler.middleware";
-import { RequestLoggerMiddleware } from "./middleware/request-logger.middleware";
 import authRouter from "./modules/auth/auth.router";
 import orderRouter from "./modules/orders/order.router";
 
@@ -14,9 +13,6 @@ const router = express.Router();
 // Middleware to parse the request body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Request logger middleware
-app.use(RequestLoggerMiddleware);
 
 // Middleware to clean the request
 app.use(cleanupMiddleware);

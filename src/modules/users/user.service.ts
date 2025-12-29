@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-import { InternalServerError, NotFoundError } from "../../shared/app-error";
+import { BadRequestError, NotFoundError } from "../../shared/app-error";
 import { PasswordHash } from "../../shared/password-hash";
 import type { UserRepository } from "./user.repository";
 import type { IUser, IUserCreate, IUserSafe } from "./user.type";
@@ -11,10 +11,9 @@ export class UserService {
   public async createUser(user: IUserCreate): Promise<IUserSafe> {
     const existingUser = await this.userRepository.findByEmail(user.email);
     if (existingUser) {
-      throw new InternalServerError("Failed to create user", {
+      throw new BadRequestError("Email already exists", {
         origin: "UserService.createUser",
         email: user.email,
-        message: "User already exists",
       });
     }
 

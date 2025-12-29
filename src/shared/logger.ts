@@ -11,9 +11,10 @@ interface ILogger {
 }
 
 const LOG_LEVEL = process.env.LOG_LEVEL;
+const NODE_ENV = process.env.NODE_ENV;
 
-if (!LOG_LEVEL) {
-  throw new Error("LOG_LEVEL is required");
+if (!LOG_LEVEL || !NODE_ENV) {
+  throw new Error("LOG_LEVEL and NODE_ENV are required");
 }
 
 const pinoLogger = pino({

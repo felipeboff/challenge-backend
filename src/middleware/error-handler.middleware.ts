@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { MongooseError } from "mongoose";
 import z from "zod";
 
 import { AppError, StatusCodeError } from "../shared/app-error";
@@ -40,6 +41,23 @@ export const ErrorHandlerMiddleware = (
     return response.status(StatusCodeError.BAD_REQUEST).json({
       issues: error.issues,
     });
+  }
+
+  if (error instanceof Error) {
+    const mongooseError = error as MongooseError;
+    if (mongooseError.name === "MongoServerError") {
+      logger.error("Mongoose error", {
+        error,
+        details: {
+          stack: error.stack,
+          path: request.path,
+          method: request.method,
+        },
+      });
+      return response.status(StatusCodeError.SERVICE_UNAVAILABLE).json({
+        error: "Service unavailable",
+      });
+    }
   }
 
   logger.error("Unhandled error", {

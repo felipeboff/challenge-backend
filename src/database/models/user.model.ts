@@ -14,9 +14,8 @@ const userSchema = new mongoose.Schema<IUser>(
     updatedAt: { type: Date, default: Date.now },
   },
   {
-    timestamps: true,
     versionKey: false,
-  },
+  }
 );
 
 export const UserModel = mongoose.model<IUser>("User", userSchema);

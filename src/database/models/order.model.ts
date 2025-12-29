@@ -26,9 +26,8 @@ const serviceSchema = new mongoose.Schema<IOrderService>(
     updatedAt: { type: Date, default: Date.now },
   },
   {
-    timestamps: true,
     versionKey: false,
-  },
+  }
 );
 
 const orderSchema = new mongoose.Schema<IOrder>(
@@ -59,9 +58,8 @@ const orderSchema = new mongoose.Schema<IOrder>(
     updatedAt: { type: Date, default: Date.now },
   },
   {
-    timestamps: true,
     versionKey: false,
-  },
+  }
 );
 
 export const OrderModel = mongoose.model<IOrder>("Order", orderSchema);

@@ -38,6 +38,12 @@ export class OrderService {
       updatedAt: new Date(),
     }));
 
+    if (services.length === 0) {
+      throw new BadRequestError("Services are required", {
+        origin: "OrderService.createOrder",
+      });
+    }
+
     const totalValue = services.reduce(
       (acc: number, service: IOrderService) => acc + service.value,
       0
@@ -225,7 +231,7 @@ export class OrderService {
       });
     }
 
-    const stageIndex = Object.keys(ORDER_STAGE_SEQUENCE).indexOf(order.stage);
+    const stageIndex = Object.values(ORDER_STAGE_SEQUENCE).indexOf(order.stage);
     const nextStage: ENUMOrderStage | undefined =
       ORDER_STAGE_SEQUENCE[stageIndex + 1];
     if (!nextStage) {
@@ -299,12 +305,6 @@ export class OrderService {
     data: UpdateServiceInput
   ): Promise<IOrderService> => {
     const order = await this.orderRepository.findById(orderId);
-    if (!order) {
-      throw new NotFoundError("Order not found", {
-        origin: "OrderService.updateService",
-        orderId: orderId,
-      });
-    }
 
     if (!order.userId.equals(user._id)) {
       throw new NotFoundError("Order not found", {
@@ -325,16 +325,15 @@ export class OrderService {
       });
     }
 
-    const service: IOrderService = {
+    const serviceUpdate: IOrderService = {
       ...serviceFound,
       ...data,
-      updatedAt: new Date(),
     };
 
     const updatedService = await this.orderRepository.updateService(
       orderId,
       serviceId,
-      service
+      serviceUpdate
     );
     return updatedService;
   };

@@ -6,6 +6,8 @@ export enum StatusCodeError {
   CONFLICT = 409,
   UNPROCESSABLE_ENTITY = 422,
   INTERNAL_SERVER_ERROR = 500,
+  BAD_GATEWAY = 502,
+  SERVICE_UNAVAILABLE = 503,
 }
 
 export type ErrorDetails = Record<string, unknown>;
@@ -87,5 +89,12 @@ export class InternalServerError extends AppError {
   constructor(message = "Internal Server Error", details?: ErrorDetails) {
     super(message, StatusCodeError.INTERNAL_SERVER_ERROR, details);
     this.name = "InternalServerError";
+  }
+}
+
+export class ServiceUnavailableError extends AppError {
+  constructor(message = "Service Unavailable", details?: ErrorDetails) {
+    super(message, StatusCodeError.SERVICE_UNAVAILABLE, details);
+    this.name = "ServiceUnavailableError";
   }
 }
