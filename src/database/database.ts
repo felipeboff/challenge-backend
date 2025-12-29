@@ -4,6 +4,7 @@ import "./models/order.model";
 import mongoose from "mongoose";
 
 import { env } from "../config/env";
+import { logger } from "../shared/logger";
 
 export class Database {
   private static instance: Database;
@@ -21,25 +22,34 @@ export class Database {
 
   public async connect(): Promise<void> {
     if (this.isConnected) {
-      console.log("Database is already connected");
+      logger.debug("Database is already connected");
       return;
     }
 
-    try {
-      const databaseName =
-        env.NODE_ENV === "development"
-          ? env.MONGO_DB_DEVELOPMENT
-          : env.MONGO_DB_PRODUCTION;
+    const databaseName =
+      env.NODE_ENV === "development"
+        ? env.MONGO_DB_DEVELOPMENT
+        : env.MONGO_DB_PRODUCTION;
 
+    try {
       await mongoose.connect(env.MONGO_URI, {
         dbName: databaseName,
       });
       this.isConnected = true;
-      console.log("✅ Successfully connected to MongoDB");
+      logger.info("Successfully connected to MongoDB", {
+        details: {
+          database: databaseName,
+        },
+      });
 
       this.setupConnectionEvents();
     } catch (error) {
-      console.error("❌ Error connecting to MongoDB:", error);
+      logger.error("Error connecting to MongoDB", {
+        details: {
+          database: databaseName,
+        },
+        error,
+      });
       this.isConnected = false;
       throw error;
     }
@@ -47,16 +57,16 @@ export class Database {
 
   public async disconnect(): Promise<void> {
     if (!this.isConnected) {
-      console.log("Database is already disconnected");
+      logger.debug("Database is already disconnected");
       return;
     }
 
     try {
       await mongoose.disconnect();
       this.isConnected = false;
-      console.log("✅ Successfully disconnected from MongoDB");
+      logger.info("Successfully disconnected from MongoDB");
     } catch (error) {
-      console.error("❌ Error disconnecting from MongoDB:", error);
+      logger.error("Error disconnecting from MongoDB", { error });
       throw error;
     }
   }
@@ -71,22 +81,22 @@ export class Database {
 
   private setupConnectionEvents(): void {
     mongoose.connection.on("error", (error) => {
-      console.error("❌ MongoDB connection error:", error);
+      logger.error("MongoDB connection error", error);
       this.isConnected = false;
     });
 
     mongoose.connection.on("disconnected", () => {
-      console.log("⚠️ MongoDB disconnected");
+      logger.warn("MongoDB disconnected");
       this.isConnected = false;
     });
 
     mongoose.connection.on("reconnected", () => {
-      console.log("✅ MongoDB reconnected");
+      logger.info("MongoDB reconnected");
       this.isConnected = true;
     });
 
     mongoose.connection.on("connected", () => {
-      console.log("✅ MongoDB connected");
+      logger.info("MongoDB connected");
       this.isConnected = true;
     });
   }

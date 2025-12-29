@@ -8,7 +8,7 @@ import { JwtService } from "../shared/jwt-service";
 export const authMiddleware = async (
   req: Request,
   _res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
   void _res;
 
@@ -30,14 +30,5 @@ export const authMiddleware = async (
 
   req.authContext = { user: user.toObject() };
 
-  next();
-};
-
-export const authMiddlewareCleaner = (
-  req: Request,
-  _: Response,
-  next: NextFunction,
-): void => {
-  delete req.authContext;
   next();
 };

@@ -13,19 +13,16 @@ export type ErrorDetails = Record<string, unknown> | undefined;
 export class AppError extends Error {
   public readonly statusCode: StatusCodeError;
   public readonly details?: ErrorDetails;
-  public readonly isOperational: boolean;
 
   constructor(
     message: string,
     statusCode: StatusCodeError = StatusCodeError.INTERNAL_SERVER_ERROR,
-    details?: ErrorDetails,
-    isOperational = true,
+    details?: ErrorDetails
   ) {
     super(message);
     this.name = "AppError";
     this.statusCode = statusCode;
     this.details = details;
-    this.isOperational = isOperational;
     Error.captureStackTrace(this, this.constructor);
   }
 
@@ -88,7 +85,7 @@ export class UnprocessableEntityError extends AppError {
 
 export class InternalServerError extends AppError {
   constructor(message = "Internal Server Error", details?: ErrorDetails) {
-    super(message, StatusCodeError.INTERNAL_SERVER_ERROR, details, false);
+    super(message, StatusCodeError.INTERNAL_SERVER_ERROR, details);
     this.name = "InternalServerError";
   }
 }

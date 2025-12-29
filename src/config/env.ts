@@ -1,8 +1,11 @@
 import { config } from "dotenv";
 import z from "zod";
 
+import { logger } from "../shared/logger";
+
 config({
   path: ".env",
+  quiet: true,
 });
 
 const envSchema = z.object({
@@ -17,12 +20,15 @@ const envSchema = z.object({
   JWT_ALGORITHM: z.enum(["HS256", "RS256", "ES256", "PS256"]),
   PASSWORD_SALT: z.coerce.number().min(8).max(10),
   PASSWORD_SECRET: z.string().length(8),
+  LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).optional(),
 });
 
 const result = envSchema.safeParse(process.env);
 
 if (!result.success) {
-  console.error(result.error.message);
+  logger.error("Environment validation error:", {
+    error: result.error,
+  });
   process.exit(1);
 }
 

@@ -1,10 +1,9 @@
 import express from "express";
 
-import {
-  authMiddleware,
-  authMiddlewareCleaner,
-} from "./middleware/auth.middleware";
+import { authMiddleware } from "./middleware/auth.middleware";
+import { cleanupMiddleware } from "./middleware/cleanup.middleware";
 import { ErrorHandlerMiddleware } from "./middleware/error-handler.middleware";
+import { RequestLoggerMiddleware } from "./middleware/request-logger.middleware";
 import authRouter from "./modules/auth/auth.router";
 import orderRouter from "./modules/orders/order.router";
 
@@ -16,13 +15,16 @@ const router = express.Router();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware to clean the auth context
-app.use(authMiddlewareCleaner);
+// Request logger middleware
+app.use(RequestLoggerMiddleware);
 
-// Auth routes (public - no authentication required)
+// Middleware to clean the request
+app.use(cleanupMiddleware);
+
+// Auth routes
 router.use("/auth", authRouter);
 
-// Auth middleware (protects routes below this point)
+// Auth middleware
 router.use(authMiddleware);
 
 // Order routes
@@ -31,7 +33,7 @@ router.use("/orders", orderRouter);
 // API routes
 app.use("/api", router);
 
-// Error handler middleware (must be last)
+// Error handler middleware
 app.use(ErrorHandlerMiddleware);
 
 export default app;
