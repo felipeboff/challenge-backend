@@ -1,19 +1,18 @@
 import { InternalServerError, UnauthorizedError } from "../../shared/app-error";
 import { JwtService } from "../../shared/jwt-service";
 import { PasswordHash } from "../../shared/password-hash";
-import { UserService } from "../users/user.service";
-import { IUser, IUserRepository, IUserSafe } from "../users/user.type";
-import { LoginInput, RegisterInput } from "./auth.schema";
+import type { UserRepository } from "../users/user.repository";
+import type { UserService } from "../users/user.service";
+import type { LoginInput, RegisterInput } from "./auth.schema";
+import type { IAuthUser } from "./auth.type";
 
 export class AuthService {
   constructor(
-    private readonly userRepository: IUserRepository,
+    private readonly userRepository: UserRepository,
     private readonly userService: UserService,
   ) {}
 
-  public registerUser = async (
-    user: RegisterInput,
-  ): Promise<{ token: string; user: IUserSafe }> => {
+  public registerUser = async (user: RegisterInput): Promise<IAuthUser> => {
     const userCreated = await this.userService.createUser(user);
 
     const token = JwtService.sign({ userId: userCreated._id.toString() });
@@ -24,9 +23,7 @@ export class AuthService {
     return { token, user: userCreated };
   };
 
-  public loginUser = async (
-    user: LoginInput,
-  ): Promise<{ token: string; user: Omit<IUser, "password"> }> => {
+  public loginUser = async (user: LoginInput): Promise<IAuthUser> => {
     const userFound = await this.userRepository.findByEmail(user.email);
     if (!userFound) {
       throw new UnauthorizedError("Invalid email or password");

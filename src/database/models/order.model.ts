@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 
 import {
+  ENUMOrderServiceStatus,
   ENUMOrderStage,
   ENUMOrderStatus,
-  ENUMServiceStatus,
   IOrder,
-  IService,
+  IOrderService,
 } from "../../modules/orders/order.type";
 
-const serviceSchema = new mongoose.Schema<IService>(
+const serviceSchema = new mongoose.Schema<IOrderService>(
   {
     _id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -18,7 +18,7 @@ const serviceSchema = new mongoose.Schema<IService>(
     value: { type: Number, required: true },
     status: {
       type: String,
-      enum: ENUMServiceStatus,
+      enum: ENUMOrderServiceStatus,
       required: true,
       index: true,
     },

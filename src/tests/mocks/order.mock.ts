@@ -6,7 +6,7 @@ import {
 } from "../../modules/orders/order.schema";
 
 export function createMockServiceInput(
-  overrides?: Partial<CreateServiceInput>
+  overrides?: Partial<CreateServiceInput>,
 ): CreateServiceInput {
   return {
     name: faker.commerce.productName(),
@@ -16,14 +16,14 @@ export function createMockServiceInput(
 }
 
 export function createMockOrderInput(
-  overrides?: Partial<CreateOrderInput>
+  overrides?: Partial<CreateOrderInput>,
 ): CreateOrderInput {
   return {
     labName: faker.company.name(),
     patientName: faker.person.fullName(),
     clinicName: faker.company.name(),
     services: Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () =>
-      createMockServiceInput()
+      createMockServiceInput(),
     ),
     expiresAt: faker.date.future(),
     ...overrides,

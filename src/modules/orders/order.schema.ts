@@ -3,9 +3,9 @@ import z from "zod";
 
 import { transformObjectId } from "../../shared/transform-object-id";
 import {
+  ENUMOrderServiceStatus,
   ENUMOrderStage,
   ENUMOrderStatus,
-  ENUMServiceStatus,
 } from "./order.type";
 
 export const CreateServiceSchema = z
@@ -39,7 +39,7 @@ export const UpdateServiceSchema = z
     createdAt: z.coerce.date({ message: "Invalid Created At" }).optional(),
     updatedAt: z.coerce.date({ message: "Invalid Updated At" }).optional(),
     status: z
-      .enum(ENUMServiceStatus, { message: "Invalid Service Status" })
+      .enum(ENUMOrderServiceStatus, { message: "Invalid Service Status" })
       .optional(),
   })
   .strict();

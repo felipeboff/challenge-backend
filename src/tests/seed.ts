@@ -4,9 +4,9 @@ import { Types } from "mongoose";
 import { OrderModel } from "../database/models/order.model";
 import { UserModel } from "../database/models/user.model";
 import {
+  ENUMOrderServiceStatus,
   ENUMOrderStage,
   ENUMOrderStatus,
-  ENUMServiceStatus,
   IOrder,
 } from "../modules/orders/order.type";
 import { IUser } from "../modules/users/user.type";
@@ -33,7 +33,7 @@ export async function seedDatabase(): Promise<{
 
       const result = await UserModel.create(user);
       return result.toObject();
-    })
+    }),
   );
 
   const orders = await Promise.all(
@@ -51,7 +51,7 @@ export async function seedDatabase(): Promise<{
               ...service,
               _id: new Types.ObjectId(),
               status: faker.helpers.arrayElement(
-                Object.values(ENUMServiceStatus)
+                Object.values(ENUMOrderServiceStatus),
               ),
               createdAt: new Date(),
               updatedAt: new Date(),
@@ -63,9 +63,9 @@ export async function seedDatabase(): Promise<{
 
           const result = await OrderModel.create(order);
           return result.toObject();
-        }
+        },
       );
-    })
+    }),
   ).then((ordersArrays) => ordersArrays.flat());
 
   return { users, orders };
@@ -73,7 +73,7 @@ export async function seedDatabase(): Promise<{
 
 export async function seedUser(
   email?: string,
-  password?: string
+  password?: string,
 ): Promise<IUser> {
   const mockUser = createMockUserInput();
 
@@ -93,7 +93,7 @@ export async function seedUser(
 
 export async function seedOrdersForUser(
   userId: Types.ObjectId,
-  count: number = 3
+  count: number = 3,
 ): Promise<IOrder[]> {
   return Promise.all(
     Array.from({ length: count }, async () => {
@@ -107,7 +107,9 @@ export async function seedOrdersForUser(
         services: mockOrder.services.map((service) => ({
           ...service,
           _id: new Types.ObjectId(),
-          status: faker.helpers.arrayElement(Object.values(ENUMServiceStatus)),
+          status: faker.helpers.arrayElement(
+            Object.values(ENUMOrderServiceStatus),
+          ),
           createdAt: new Date(),
           updatedAt: new Date(),
         })),
@@ -116,6 +118,6 @@ export async function seedOrdersForUser(
       };
       const result = await OrderModel.create(order);
       return result.toObject();
-    })
+    }),
   );
 }

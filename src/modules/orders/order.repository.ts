@@ -1,13 +1,12 @@
-import { Types } from "mongoose";
+import { type Model, Types } from "mongoose";
 
-import { OrderModel } from "../../database/models/order.model";
 import { NotFoundError } from "../../shared/app-error";
-import { GetOrdersQueryInput } from "./order.schema";
-import { IOrderPagination, IOrderRepository, IService } from "./order.type";
-import { IOrder } from "./order.type";
+import type { GetOrdersQueryInput } from "./order.schema";
+import type { IOrderPagination, IOrderService } from "./order.type";
+import type { IOrder } from "./order.type";
 
-export class OrderRepository implements IOrderRepository {
-  constructor(private readonly orderModel: typeof OrderModel) {}
+export class OrderRepository {
+  constructor(private readonly orderModel: Model<IOrder>) {}
 
   public create = async (order: IOrder): Promise<IOrder> => {
     const result = await this.orderModel.create(order);
@@ -21,8 +20,8 @@ export class OrderRepository implements IOrderRepository {
 
   public createService = async (
     orderId: Types.ObjectId,
-    service: IService,
-  ): Promise<IService> => {
+    service: IOrderService,
+  ): Promise<IOrderService> => {
     const result = await this.orderModel
       .findByIdAndUpdate(
         orderId,
@@ -84,8 +83,8 @@ export class OrderRepository implements IOrderRepository {
   public updateService = async (
     orderId: Types.ObjectId,
     serviceId: Types.ObjectId,
-    service: IService,
-  ): Promise<IService> => {
+    service: IOrderService,
+  ): Promise<IOrderService> => {
     const result = await this.orderModel
       .findByIdAndUpdate(
         orderId,

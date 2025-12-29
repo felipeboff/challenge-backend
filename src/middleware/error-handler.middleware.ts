@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import z from "zod";
 
 import { AppError, StatusCodeError } from "../shared/app-error";
@@ -7,28 +7,22 @@ export const ErrorHandlerMiddleware = (
   error: unknown,
   _req: Request,
   res: Response,
-  next: NextFunction
-): void => {
+  _next: NextFunction,
+): Response<{ error: string }> => {
+  void _next;
+  void _req;
+
   if (error instanceof AppError) {
-    res.status(error.statusCode).json(error.toJSON());
-    return;
+    return res.status(error.statusCode).json({ error: error.message });
   }
 
   if (error instanceof z.ZodError) {
-    res.status(StatusCodeError.BAD_REQUEST).json({
-      name: "ZodError",
-      message: "Invalid data",
-      statusCode: StatusCodeError.BAD_REQUEST,
-      details: error.issues,
+    return res.status(StatusCodeError.BAD_REQUEST).json({
+      error: error.issues.map((issue) => issue.message).join(", "),
     });
-    return;
   }
 
-  res.status(StatusCodeError.INTERNAL_SERVER_ERROR).json({
-    name: "AppError",
-    message: "Internal server error",
-    statusCode: StatusCodeError.INTERNAL_SERVER_ERROR,
+  return res.status(StatusCodeError.INTERNAL_SERVER_ERROR).json({
+    error: "Internal server error",
   });
-  console.error(error);
-  next();
 };

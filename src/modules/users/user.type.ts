@@ -19,9 +19,3 @@ export interface IUserCreate {
   email: string;
   password: string;
 }
-
-export interface IUserRepository {
-  create(user: IUser): Promise<IUser>;
-  findByEmail(email: string): Promise<IUser | null>;
-  findById(id: Types.ObjectId): Promise<IUser | null>;
-}

@@ -10,12 +10,16 @@ import {
   UpdateOrderSchema,
   UpdateServiceSchema,
 } from "./order.schema";
-import { OrderService } from "./order.service";
+import type { OrderService } from "./order.service";
+import type { IOrder, IOrderPagination, IOrderService } from "./order.type";
 
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  public createOrder = async (req: Request, res: Response) => {
+  public createOrder = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<IOrder>> => {
     const user = req.authContext!.user;
 
     const data = CreateOrderSchema.parse(req.body);
@@ -24,7 +28,10 @@ export class OrderController {
     return HttpResponse.created(res, order);
   };
 
-  public getOrders = async (req: Request, res: Response) => {
+  public getOrders = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<IOrderPagination>> => {
     const user = req.authContext!.user;
 
     const query = GetOrdersQuerySchema.parse(req.query);
@@ -33,7 +40,10 @@ export class OrderController {
     return HttpResponse.ok(res, orders);
   };
 
-  public getOrderById = async (req: Request, res: Response) => {
+  public getOrderById = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<IOrder>> => {
     const user = req.authContext!.user;
 
     const orderId = transformObjectId(req.params.orderId);
@@ -45,7 +55,10 @@ export class OrderController {
     return HttpResponse.ok(res, order);
   };
 
-  public updateOrder = async (req: Request, res: Response) => {
+  public updateOrder = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<IOrder>> => {
     const user = req.authContext!.user;
 
     const orderId = transformObjectId(req.params.orderId);
@@ -58,7 +71,10 @@ export class OrderController {
     return HttpResponse.ok(res, order);
   };
 
-  public advanceOrderStage = async (req: Request, res: Response) => {
+  public advanceOrderStage = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<IOrder>> => {
     const user = req.authContext!.user;
 
     const orderId = transformObjectId(req.params.orderId);
@@ -70,7 +86,10 @@ export class OrderController {
     return HttpResponse.ok(res, order);
   };
 
-  public createService = async (req: Request, res: Response) => {
+  public createService = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<IOrderService>> => {
     const user = req.authContext!.user;
 
     const orderId = transformObjectId(req.params.orderId);
@@ -84,7 +103,10 @@ export class OrderController {
     return HttpResponse.created(res, service);
   };
 
-  public updateService = async (req: Request, res: Response) => {
+  public updateService = async (
+    req: Request,
+    res: Response,
+  ): Promise<Response<IOrderService>> => {
     const user = req.authContext!.user;
 
     const orderId = transformObjectId(req.params.orderId);

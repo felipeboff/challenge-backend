@@ -5,28 +5,26 @@ import {
   InternalServerError,
   NotFoundError,
 } from "../../shared/app-error";
-import { IUser } from "../users/user.type";
-import {
+import type { IUser } from "../users/user.type";
+import type { OrderRepository } from "./order.repository";
+import type {
   CreateOrderInput,
   CreateServiceInput,
   GetOrdersQueryInput,
   UpdateOrderInput,
   UpdateServiceInput,
 } from "./order.schema";
+import type { IOrder, IOrderPagination, IOrderService } from "./order.type";
 import {
   ALLOWED_ORDER_STAGE_TRANSITIONS,
+  ENUMOrderServiceStatus,
   ENUMOrderStage,
   ENUMOrderStatus,
-  ENUMServiceStatus,
-  IOrder,
-  IOrderPagination,
-  IOrderRepository,
-  IService,
   ORDER_STAGE_SEQUENCE,
 } from "./order.type";
 
 export class OrderService {
-  constructor(private readonly orderRepository: IOrderRepository) {}
+  constructor(private readonly orderRepository: OrderRepository) {}
 
   public createOrder = async (
     order: CreateOrderInput,
@@ -35,13 +33,13 @@ export class OrderService {
     const services = order.services.map((service) => ({
       ...service,
       _id: new Types.ObjectId(),
-      status: ENUMServiceStatus.PENDING,
+      status: ENUMOrderServiceStatus.PENDING,
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
 
     const totalValue = services.reduce(
-      (acc: number, service: IService) => acc + service.value,
+      (acc: number, service: IOrderService) => acc + service.value,
       0,
     );
     if (totalValue <= 0) {
@@ -98,8 +96,8 @@ export class OrderService {
       throw new NotFoundError("Order not found");
     }
 
-    const services: IService[] | undefined = data.services?.map(
-      (service: Partial<IService>) => {
+    const services: IOrderService[] | undefined = data.services?.map(
+      (service: Partial<IOrderService>) => {
         const serviceFound = order.services.find((s) =>
           s._id.equals(service._id),
         );
@@ -118,7 +116,7 @@ export class OrderService {
     }
 
     const totalValue = services.reduce(
-      (acc: number, service: IService) => acc + service.value,
+      (acc: number, service: IOrderService) => acc + service.value,
       0,
     );
     if (totalValue <= 0) {
@@ -188,16 +186,16 @@ export class OrderService {
     orderId: Types.ObjectId,
     user: IUser,
     data: CreateServiceInput,
-  ): Promise<IService> => {
+  ): Promise<IOrderService> => {
     const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
       throw new NotFoundError("Order not found");
     }
 
-    const service: IService = {
+    const service: IOrderService = {
       ...data,
       _id: new Types.ObjectId(),
-      status: ENUMServiceStatus.PENDING,
+      status: ENUMOrderServiceStatus.PENDING,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -214,7 +212,7 @@ export class OrderService {
     serviceId: Types.ObjectId,
     user: IUser,
     data: UpdateServiceInput,
-  ): Promise<IService> => {
+  ): Promise<IOrderService> => {
     const order = await this.orderRepository.findById(orderId);
     if (!order || !order.userId.equals(user._id)) {
       throw new NotFoundError("Order not found");
@@ -225,7 +223,7 @@ export class OrderService {
       throw new NotFoundError("Service not found");
     }
 
-    const service: IService = {
+    const service: IOrderService = {
       ...serviceFound,
       ...data,
       updatedAt: new Date(),

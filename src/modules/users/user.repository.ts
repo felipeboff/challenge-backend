@@ -1,10 +1,9 @@
 import { Types } from "mongoose";
 
 import { UserModel } from "../../database/models/user.model";
-import { IUserRepository } from "./user.type";
 import { IUser } from "./user.type";
 
-export class UserRepository implements IUserRepository {
+export class UserRepository {
   constructor(private readonly userModel: typeof UserModel) {}
 
   async create(user: IUser): Promise<IUser> {
