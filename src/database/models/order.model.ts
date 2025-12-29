@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 import {
   ENUMOrderServiceStatus,
@@ -10,12 +10,15 @@ import {
 
 const serviceSchema = new mongoose.Schema<IOrderService>(
   {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-      default: () => new mongoose.Types.ObjectId(),
+    name: {
+      type: String,
+      required: true,
     },
-    name: { type: String, required: true },
-    value: { type: Number, required: true },
+    value: {
+      type: Number,
+      required: true,
+      min: 0.01,
+    },
     status: {
       type: String,
       enum: ENUMOrderServiceStatus,
@@ -27,38 +30,64 @@ const serviceSchema = new mongoose.Schema<IOrderService>(
   },
   {
     versionKey: false,
+    id: true,
   }
 );
 
 const orderSchema = new mongoose.Schema<IOrder>(
   {
-    _id: {
-      type: mongoose.Schema.Types.ObjectId,
-      default: () => new mongoose.Types.ObjectId(),
+    labName: {
+      type: String,
+      required: true,
+      index: true,
     },
-    labName: { type: String, required: true, index: true },
-    patientName: { type: String, required: true, index: true },
-    clinicName: { type: String, required: true, index: true },
-    stage: { type: String, enum: ENUMOrderStage, required: true, index: true },
+    patientName: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    clinicName: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    stage: {
+      type: String,
+      enum: ENUMOrderStage,
+      required: true,
+      index: true,
+    },
     status: {
       type: String,
       enum: ENUMOrderStatus,
       required: true,
       index: true,
     },
-    services: { type: [serviceSchema], required: true },
+    services: {
+      type: [serviceSchema],
+      required: true,
+      validate: {
+        validator: (v: IOrderService[]) => v.length > 0,
+        message: "Services must be at least 1",
+      },
+    },
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "User",
       required: true,
       index: true,
     },
-    expiresAt: { type: Date, required: true, index: true },
+    expiresAt: {
+      type: Date,
+      required: true,
+      index: true,
+    },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   },
   {
     versionKey: false,
+    id: true,
   }
 );
 

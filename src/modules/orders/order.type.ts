@@ -12,7 +12,7 @@ export enum ENUMOrderStage {
 }
 
 export interface IOrder {
-  _id: Types.ObjectId;
+  id: Types.ObjectId;
   labName: string;
   patientName: string;
   clinicName: string;
@@ -61,7 +61,7 @@ export enum ENUMOrderServiceStatus {
   CANCELLED = "cancelled",
 }
 export interface IOrderService {
-  _id: Types.ObjectId;
+  id: Types.ObjectId;
   name: string;
   value: number;
   status: ENUMOrderServiceStatus;

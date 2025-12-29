@@ -21,7 +21,7 @@ export class UserService {
     const now = new Date();
 
     const userData: IUser = {
-      _id: new Types.ObjectId(),
+      id: new Types.ObjectId(),
       email: user.email,
       password: hashedPassword,
       createdAt: now,

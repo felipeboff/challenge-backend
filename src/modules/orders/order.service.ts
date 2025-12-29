@@ -61,8 +61,8 @@ export class OrderService {
     const orderData: IOrder = {
       ...order,
       services,
-      _id: new Types.ObjectId(),
-      userId: user._id,
+      id: new Types.ObjectId(),
+      userId: user.id,
       stage: ENUMOrderStage.CREATED,
       status: ENUMOrderStatus.ACTIVE,
       createdAt: new Date(),
@@ -85,12 +85,12 @@ export class OrderService {
       });
     }
 
-    if (!order.userId.equals(user._id)) {
+    if (!order.userId.equals(user.id)) {
       throw new NotFoundError("Order not found", {
         origin: "OrderService.getOrderById",
         orderId: orderId,
         message: "User does not have access to this order",
-        userId: user._id,
+        userId: user.id,
         orderUserId: order.userId,
       });
     }
@@ -103,7 +103,7 @@ export class OrderService {
     query: GetOrdersQueryInput
   ): Promise<IOrderPagination> => {
     const pagination = await this.orderRepository.findAllPaginated(
-      user._id,
+      user.id,
       query
     );
     return pagination;
@@ -122,12 +122,12 @@ export class OrderService {
       });
     }
 
-    if (!order.userId.equals(user._id)) {
+    if (!order.userId.equals(user.id)) {
       throw new NotFoundError("Order not found", {
         origin: "OrderService.updateOrder",
         orderId: orderId,
         message: "User does not have access to this order",
-        userId: user._id,
+        userId: user.id,
         orderUserId: order.userId,
       });
     }
@@ -135,13 +135,13 @@ export class OrderService {
     const services: IOrderService[] | undefined = data.services?.map(
       (service: Partial<IOrderService>) => {
         const serviceFound = order.services.find((s) =>
-          s._id.equals(service._id)
+          s.id.equals(service.id)
         );
         if (!serviceFound) {
           throw new NotFoundError("Service not found", {
             origin: "OrderService.updateOrder",
             orderId: orderId,
-            serviceId: service._id,
+            serviceId: service.id,
           });
         }
         return {
@@ -221,12 +221,12 @@ export class OrderService {
       });
     }
 
-    if (!order.userId.equals(user._id)) {
+    if (!order.userId.equals(user.id)) {
       throw new NotFoundError("Order not found", {
         origin: "OrderService.advanceOrderStage",
         orderId: orderId,
         message: "User does not have access to this order",
-        userId: user._id,
+        userId: user.id,
         orderUserId: order.userId,
       });
     }
@@ -273,19 +273,19 @@ export class OrderService {
       });
     }
 
-    if (!order.userId.equals(user._id)) {
+    if (!order.userId.equals(user.id)) {
       throw new NotFoundError("Order not found", {
         origin: "OrderService.createService",
         orderId: orderId,
         message: "User does not have access to this order",
-        userId: user._id,
+        userId: user.id,
         orderUserId: order.userId,
       });
     }
 
     const service: IOrderService = {
       ...data,
-      _id: new Types.ObjectId(),
+      id: new Types.ObjectId(),
       status: ENUMOrderServiceStatus.PENDING,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -306,17 +306,17 @@ export class OrderService {
   ): Promise<IOrderService> => {
     const order = await this.orderRepository.findById(orderId);
 
-    if (!order.userId.equals(user._id)) {
+    if (!order.userId.equals(user.id)) {
       throw new NotFoundError("Order not found", {
         origin: "OrderService.updateService",
         orderId: orderId,
         message: "User does not have access to this order",
-        userId: user._id,
+        userId: user.id,
         orderUserId: order.userId,
       });
     }
 
-    const serviceFound = order.services.find((s) => s._id.equals(serviceId));
+    const serviceFound = order.services.find((s) => s.id.equals(serviceId));
     if (!serviceFound) {
       throw new NotFoundError("Service not found", {
         origin: "OrderService.updateService",

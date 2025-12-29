@@ -1,19 +1,14 @@
 import { Types } from "mongoose";
 
 export interface IUser {
-  _id: Types.ObjectId;
+  id: Types.ObjectId;
   email: string;
   password: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface IUserSafe {
-  _id: Types.ObjectId;
-  email: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export interface IUserSafe extends Omit<IUser, "password"> {}
 
 export interface IUserCreate {
   email: string;

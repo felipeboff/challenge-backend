@@ -13,6 +13,11 @@ import { IUser } from "../modules/users/user.type";
 import { PasswordHash } from "../shared/password-hash";
 import { createMockOrderInput } from "./mocks/order.mock";
 import { createMockUserInput } from "./mocks/user.mock";
+import { IUserDocument, toObjectUser } from "../modules/users/user.repository";
+import {
+  IOrderDocument,
+  toObjectOrder,
+} from "../modules/orders/order.repository";
 
 export async function seedDatabase(): Promise<{
   users: IUser[];
@@ -23,7 +28,7 @@ export async function seedDatabase(): Promise<{
       const mockUser = createMockUserInput();
       const hashedPassword = await PasswordHash.hash(mockUser.password);
 
-      const user: IUser = {
+      const user: IUserDocument = {
         ...mockUser,
         _id: new Types.ObjectId(),
         password: hashedPassword,
@@ -32,8 +37,8 @@ export async function seedDatabase(): Promise<{
       };
 
       const result = await UserModel.create(user);
-      return result.toObject();
-    }),
+      return toObjectUser(result.toObject());
+    })
   );
 
   const orders = await Promise.all(
@@ -42,7 +47,7 @@ export async function seedDatabase(): Promise<{
         { length: faker.number.int({ min: 2, max: 4 }) },
         async () => {
           const mockOrder = createMockOrderInput();
-          const order: IOrder = {
+          const order: IOrderDocument = {
             ...mockOrder,
             _id: new Types.ObjectId(),
             stage: faker.helpers.arrayElement(Object.values(ENUMOrderStage)),
@@ -51,34 +56,34 @@ export async function seedDatabase(): Promise<{
               ...service,
               _id: new Types.ObjectId(),
               status: faker.helpers.arrayElement(
-                Object.values(ENUMOrderServiceStatus),
+                Object.values(ENUMOrderServiceStatus)
               ),
               createdAt: new Date(),
               updatedAt: new Date(),
             })),
-            userId: user._id,
+            userId: user.id,
             createdAt: new Date(),
             updatedAt: new Date(),
           };
 
           const result = await OrderModel.create(order);
-          return result.toObject();
-        },
+          return toObjectOrder(result.toObject());
+        }
       );
-    }),
+    })
   ).then((ordersArrays) => ordersArrays.flat());
 
-  return { users, orders };
+  return { users: users.map(toObjectUser), orders: orders.map(toObjectOrder) };
 }
 
 export async function seedUser(
   email?: string,
-  password?: string,
+  password?: string
 ): Promise<IUser> {
   const mockUser = createMockUserInput();
 
   const hashedPassword = await PasswordHash.hash(password || mockUser.password);
-  const user: IUser = {
+  const user: IUserDocument = {
     ...mockUser,
     email: email || mockUser.email,
     _id: new Types.ObjectId(),
@@ -88,17 +93,17 @@ export async function seedUser(
   };
 
   const result = await UserModel.create(user);
-  return result.toObject();
+  return toObjectUser(result.toObject());
 }
 
 export async function seedOrdersForUser(
   userId: Types.ObjectId,
-  count: number = 3,
+  count: number = 3
 ): Promise<IOrder[]> {
   return Promise.all(
     Array.from({ length: count }, async () => {
       const mockOrder = createMockOrderInput();
-      const order: IOrder = {
+      const order: IOrderDocument = {
         ...mockOrder,
         _id: new Types.ObjectId(),
         userId,
@@ -108,7 +113,7 @@ export async function seedOrdersForUser(
           ...service,
           _id: new Types.ObjectId(),
           status: faker.helpers.arrayElement(
-            Object.values(ENUMOrderServiceStatus),
+            Object.values(ENUMOrderServiceStatus)
           ),
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -117,7 +122,7 @@ export async function seedOrdersForUser(
         updatedAt: new Date(),
       };
       const result = await OrderModel.create(order);
-      return result.toObject();
-    }),
+      return toObjectOrder(result.toObject());
+    })
   );
 }
