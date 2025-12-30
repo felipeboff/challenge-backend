@@ -1,12 +1,15 @@
 import { Types } from "mongoose";
 
 import { BadRequestError, NotFoundError } from "../../shared/app-error";
-import { PasswordHash } from "../../shared/password-hash";
+import type { PasswordHash } from "../../shared/password-hash";
 import type { UserRepository } from "./user.repository";
 import type { IUser, IUserCreate, IUserSafe } from "./user.type";
 
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly passwordHash: PasswordHash
+  ) {}
 
   public async createUser(user: IUserCreate): Promise<IUserSafe> {
     const existingUser = await this.userRepository.findByEmail(user.email);
@@ -17,7 +20,7 @@ export class UserService {
       });
     }
 
-    const hashedPassword = await PasswordHash.hash(user.password);
+    const hashedPassword = await this.passwordHash.hash(user.password);
     const now = new Date();
 
     const userData: IUser = {

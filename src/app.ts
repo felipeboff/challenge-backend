@@ -1,10 +1,10 @@
 import express from "express";
 
-import { cleanupMiddleware } from "./middleware/cleanup.middleware";
-import { ErrorHandlerMiddleware } from "./middleware/error-handler.middleware";
+import cleanupMiddleware from "./middleware/cleanup.middleware";
+import errorHandlerMiddleware from "./middleware/error-handler.middleware";
 import authRouter from "./modules/auth/auth.router";
 import orderRouter from "./modules/orders/order.router";
-import { authMiddleware } from "./middleware/auth.middleware";
+import authMiddleware from "./middleware/auth.middleware";
 
 // Express application
 const app = express();
@@ -30,6 +30,6 @@ router.use("/orders", orderRouter);
 app.use("/api", router);
 
 // Error handler middleware
-app.use(ErrorHandlerMiddleware);
+app.use(errorHandlerMiddleware);
 
 export default app;

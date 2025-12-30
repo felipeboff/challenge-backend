@@ -23,10 +23,11 @@ export async function seedDatabase(): Promise<{
   users: IUser[];
   orders: IOrder[];
 }> {
+  const passwordHash = new PasswordHash();
   const users = await Promise.all(
     Array.from({ length: 3 }, async () => {
       const mockUser = createMockUserInput();
-      const hashedPassword = await PasswordHash.hash(mockUser.password);
+      const hashedPassword = await passwordHash.hash(mockUser.password);
 
       const user: IUserDocument = {
         ...mockUser,
@@ -81,8 +82,9 @@ export async function seedUser(
   password?: string
 ): Promise<IUser> {
   const mockUser = createMockUserInput();
+  const passwordHash = new PasswordHash();
 
-  const hashedPassword = await PasswordHash.hash(password || mockUser.password);
+  const hashedPassword = await passwordHash.hash(password || mockUser.password);
   const user: IUserDocument = {
     ...mockUser,
     email: email || mockUser.email,

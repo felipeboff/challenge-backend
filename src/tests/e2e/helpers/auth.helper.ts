@@ -16,7 +16,7 @@ export async function createAuthenticatedUser(
 
   return {
     token: response.body.token,
-    userId: response.body.user._id,
+    userId: response.body.user.id,
     email: response.body.user.email,
   };
 }
@@ -32,6 +32,6 @@ export async function loginUser(
 
   return {
     token: response.body.token,
-    userId: response.body.user._id,
+    userId: response.body.user.id,
   };
 }

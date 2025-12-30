@@ -7,11 +7,11 @@ import {
   ENUMOrderStage,
   ENUMOrderStatus,
 } from "../../modules/orders/order.type";
-import { createAuthenticatedUser } from "../helpers/auth.helper";
 import {
   createMockOrderInput,
   createMockServiceInput,
 } from "../mocks/order.mock";
+import { createAuthenticatedUser } from "./helpers/auth.helper";
 
 describe("Orders E2E Tests", () => {
   let authToken: string;
@@ -39,7 +39,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      expect(response.body).toHaveProperty("_id");
+      expect(response.body).toHaveProperty("id");
       expect(response.body).toHaveProperty("labName", orderData.labName);
       expect(response.body).toHaveProperty(
         "patientName",
@@ -313,14 +313,14 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       const response = await request(app)
         .get(`/api/orders/${orderId}`)
         .set("Authorization", `Bearer ${authToken}`)
         .expect(200);
 
-      expect(response.body).toHaveProperty("_id", orderId);
+      expect(response.body).toHaveProperty("id", orderId);
       expect(response.body).toHaveProperty("labName", orderData.labName);
       expect(response.body).toHaveProperty(
         "patientName",
@@ -347,7 +347,7 @@ describe("Orders E2E Tests", () => {
         .send(createMockOrderInput())
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       // Try to get order with first user token
       const response = await request(app)
@@ -388,7 +388,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       const updateData = {
         ...createResponse.body,
@@ -402,7 +402,7 @@ describe("Orders E2E Tests", () => {
         .send(updateData)
         .expect(200);
 
-      expect(response.body).toHaveProperty("_id", orderId);
+      expect(response.body).toHaveProperty("id", orderId);
       expect(response.body).toHaveProperty("labName", updateData.labName);
       expect(response.body).toHaveProperty(
         "patientName",
@@ -430,7 +430,7 @@ describe("Orders E2E Tests", () => {
         .send(createMockOrderInput())
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       // Try to update order with first user token
       const response = await request(app)
@@ -461,7 +461,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       const response = await request(app)
         .put(`/api/orders/${orderId}`)
@@ -494,7 +494,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
       expect(createResponse.body.stage).toBe(ENUMOrderStage.CREATED);
 
       const response = await request(app)
@@ -502,7 +502,7 @@ describe("Orders E2E Tests", () => {
         .set("Authorization", `Bearer ${authToken}`)
         .expect(200);
 
-      expect(response.body).toHaveProperty("_id", orderId);
+      expect(response.body).toHaveProperty("id", orderId);
       expect(response.body).toHaveProperty("stage", ENUMOrderStage.ANALYSIS);
     });
 
@@ -515,7 +515,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       // Advance to ANALYSIS
       await request(app)
@@ -542,7 +542,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       // Advance to ANALYSIS
       const analysisResponse = await request(app)
@@ -584,7 +584,7 @@ describe("Orders E2E Tests", () => {
         .send(createMockOrderInput())
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       // Try to advance order with first user token
       const response = await request(app)
@@ -625,7 +625,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
       const initialServicesCount = createResponse.body.services.length;
 
       const serviceData = createMockServiceInput();
@@ -636,7 +636,7 @@ describe("Orders E2E Tests", () => {
         .send(serviceData)
         .expect(201);
 
-      expect(response.body).toHaveProperty("_id");
+      expect(response.body).toHaveProperty("id");
       expect(response.body).toHaveProperty("name", serviceData.name);
       expect(response.body).toHaveProperty("value", serviceData.value);
       expect(response.body).toHaveProperty("status", "pending");
@@ -671,7 +671,7 @@ describe("Orders E2E Tests", () => {
         .send(createMockOrderInput())
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
       const serviceData = createMockServiceInput();
 
       // Try to create service with first user token
@@ -693,7 +693,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       const response = await request(app)
         .post(`/api/orders/${orderId}/services`)
@@ -713,7 +713,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       const response = await request(app)
         .post(`/api/orders/${orderId}/services`)
@@ -759,8 +759,8 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
-      const serviceId = createResponse.body.services[0]._id;
+      const orderId = createResponse.body.id;
+      const serviceId = createResponse.body.services[0].id;
 
       const updateData = {
         ...createResponse.body.services[0],
@@ -774,7 +774,7 @@ describe("Orders E2E Tests", () => {
         .send(updateData)
         .expect(200);
 
-      expect(response.body).toHaveProperty("_id", serviceId);
+      expect(response.body).toHaveProperty("id", serviceId);
       expect(response.body).toHaveProperty("name", updateData.name);
       expect(response.body).toHaveProperty("value", updateData.value);
     });
@@ -788,8 +788,8 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
-      const serviceId = createResponse.body.services[0]._id;
+      const orderId = createResponse.body.id;
+      const serviceId = createResponse.body.services[0].id;
 
       const response = await request(app)
         .put(`/api/orders/${orderId}/services/${serviceId}`)
@@ -822,7 +822,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
       const fakeServiceId = new Types.ObjectId().toString();
 
       const response = await request(app)
@@ -842,8 +842,8 @@ describe("Orders E2E Tests", () => {
         .send(createMockOrderInput())
         .expect(201);
 
-      const orderId = createResponse.body._id;
-      const serviceId = createResponse.body.services[0]._id;
+      const orderId = createResponse.body.id;
+      const serviceId = createResponse.body.services[0].id;
 
       // Try to update service with first user token
       const response = await request(app)
@@ -876,7 +876,7 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
+      const orderId = createResponse.body.id;
 
       const response = await request(app)
         .put(`/api/orders/${orderId}/services/invalid-id`)
@@ -896,8 +896,8 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
-      const serviceId = createResponse.body.services[0]._id;
+      const orderId = createResponse.body.id;
+      const serviceId = createResponse.body.services[0].id;
 
       const response = await request(app)
         .put(`/api/orders/${orderId}/services/${serviceId}`)
@@ -917,8 +917,8 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
-      const serviceId = createResponse.body.services[0]._id;
+      const orderId = createResponse.body.id;
+      const serviceId = createResponse.body.services[0].id;
 
       const response = await request(app)
         .put(`/api/orders/${orderId}/services/${serviceId}`)
@@ -938,8 +938,8 @@ describe("Orders E2E Tests", () => {
         .send(orderData)
         .expect(201);
 
-      const orderId = createResponse.body._id;
-      const serviceId = createResponse.body.services[0]._id;
+      const orderId = createResponse.body.id;
+      const serviceId = createResponse.body.services[0].id;
 
       const response = await request(app)
         .put(`/api/orders/${orderId}/services/${serviceId}`)

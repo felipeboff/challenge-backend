@@ -22,7 +22,7 @@ export type CreateServiceInput = z.infer<typeof CreateServiceSchema>;
 
 export const UpdateServiceSchema = z
   .object({
-    _id: z
+    id: z
       .custom<Types.ObjectId>(transformObjectId, {
         message: "Invalid Service ID",
       })
@@ -71,7 +71,7 @@ export type CreateOrderInput = z.infer<typeof CreateOrderSchema>;
 
 export const UpdateOrderSchema = z
   .object({
-    _id: z
+    id: z
       .custom<Types.ObjectId>(transformObjectId, {
         message: "Invalid Order ID",
       })

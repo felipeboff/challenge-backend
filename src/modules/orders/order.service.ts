@@ -32,7 +32,7 @@ export class OrderService {
   ): Promise<IOrder> => {
     const services = order.services.map((service) => ({
       ...service,
-      _id: new Types.ObjectId(),
+      id: new Types.ObjectId(),
       status: ENUMOrderServiceStatus.PENDING,
       createdAt: new Date(),
       updatedAt: new Date(),

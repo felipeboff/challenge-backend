@@ -16,7 +16,7 @@ describe("Auth E2E Tests", () => {
 
       expect(response.body).toHaveProperty("token");
       expect(response.body).toHaveProperty("user");
-      expect(response.body.user).toHaveProperty("_id");
+      expect(response.body.user).toHaveProperty("id");
       expect(response.body.user).toHaveProperty("email", userData.email);
       expect(response.body.user).not.toHaveProperty("password");
     });
@@ -83,7 +83,7 @@ describe("Auth E2E Tests", () => {
 
       expect(response.body).toHaveProperty("token");
       expect(response.body).toHaveProperty("user");
-      expect(response.body.user).toHaveProperty("_id");
+      expect(response.body.user).toHaveProperty("id");
       expect(response.body.user).toHaveProperty("email", userData.email);
       expect(response.body.user).not.toHaveProperty("password");
     });
