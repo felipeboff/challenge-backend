@@ -29,7 +29,7 @@ const pinoLogger = pino({
   },
 });
 
-class Logger {
+export class Logger {
   private logger: pino.Logger;
 
   constructor() {
@@ -82,4 +82,4 @@ class Logger {
   }
 }
 
-export const logger = new Logger();
+export default new Logger();

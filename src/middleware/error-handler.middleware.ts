@@ -3,9 +3,9 @@ import { MongooseError } from "mongoose";
 import z from "zod";
 
 import { AppError, StatusCodeError } from "../shared/app-error";
-import { logger } from "../shared/logger";
+import logger from "../shared/logger";
 
-class ErrorHandlerMiddleware {
+export class ErrorHandlerMiddleware {
   public handle = (
     error: unknown,
     request: Request,

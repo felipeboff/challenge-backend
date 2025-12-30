@@ -513,13 +513,10 @@ describe("OrderController - Unit Tests", () => {
 
     it("should propagate BadRequestError when cannot advance stage", async () => {
       const orderId = new Types.ObjectId();
-      const error = new BadRequestError(
-        "Cannot advance from stage completed",
-        {
-          origin: "OrderService.advanceOrderStage",
-          orderId,
-        }
-      );
+      const error = new BadRequestError("Cannot advance from stage completed", {
+        origin: "OrderService.advanceOrderStage",
+        orderId,
+      });
 
       mockRequest.params = { orderId: orderId.toString() };
       vi.mocked(mockOrderService.advanceOrderStage).mockRejectedValue(error);
@@ -756,4 +753,3 @@ describe("OrderController - Unit Tests", () => {
     });
   });
 });
-

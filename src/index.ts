@@ -1,7 +1,7 @@
 import app from "./app";
 import { env } from "./config/env";
 import { database } from "./database/database";
-import { logger } from "./shared/logger";
+import logger from "./shared/logger";
 
 async function startServer() {
   try {

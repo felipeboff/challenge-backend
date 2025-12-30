@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 
-class CleanupMiddleware {
+export class CleanupMiddleware {
   public handle = (
     request: Request,
     response: Response,

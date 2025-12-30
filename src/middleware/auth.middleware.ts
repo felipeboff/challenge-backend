@@ -12,7 +12,7 @@ import {
 } from "../modules/users/user.repository";
 import { UserModel } from "../database/models/user.model";
 
-class AuthMiddleware {
+export class AuthMiddleware {
   constructor(
     private readonly userRepository: IUserRepository,
     private readonly jwtService: IJwtService

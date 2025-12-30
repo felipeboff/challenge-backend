@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import z from "zod";
 
-import { logger } from "../shared/logger";
+import logger from "../shared/logger";
 
 config({
   path: ".env",

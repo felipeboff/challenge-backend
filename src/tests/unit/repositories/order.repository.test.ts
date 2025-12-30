@@ -2,7 +2,6 @@ import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { NotFoundError } from "../../../shared/app-error";
-import { OrderModel } from "../../../database/models/order.model";
 import { OrderRepository } from "../../../modules/orders/order.repository";
 import type { GetOrdersQueryInput } from "../../../modules/orders/order.schema";
 import {
@@ -10,13 +9,8 @@ import {
   ENUMOrderStage,
   ENUMOrderStatus,
   IOrder,
-  IOrderPagination,
   IOrderService,
 } from "../../../modules/orders/order.type";
-import {
-  createMockOrderInput,
-  createMockServiceInput,
-} from "../../mocks/order.mock";
 
 describe("OrderRepository - Unit Tests", () => {
   let orderRepository: OrderRepository;
@@ -716,7 +710,11 @@ describe("OrderRepository - Unit Tests", () => {
 
       expect(mockOrderModel.findOneAndUpdate).toHaveBeenCalledWith(
         { _id: orderId, "services._id": serviceId },
-        { $set: { "services.$[elem]": expect.objectContaining({ _id: serviceId }) } },
+        {
+          $set: {
+            "services.$[elem]": expect.objectContaining({ _id: serviceId }),
+          },
+        },
         {
           arrayFilters: [{ "elem._id": serviceId }],
           new: true,
@@ -808,4 +806,3 @@ describe("OrderRepository - Unit Tests", () => {
     });
   });
 });
-

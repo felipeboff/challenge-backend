@@ -4,7 +4,7 @@ import "./models/order.model";
 import mongoose from "mongoose";
 
 import { env } from "../config/env";
-import { logger } from "../shared/logger";
+import logger from "../shared/logger";
 
 export class Database {
   private static instance: Database;
