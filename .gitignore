@@ -6,3 +6,4 @@ package-lock.json
 .cursorignore
 data
 tsconfig.tsbuildinfo
+coverage
