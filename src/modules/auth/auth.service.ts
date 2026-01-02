@@ -17,7 +17,7 @@ export class AuthService {
   public registerUser = async (user: RegisterInput): Promise<IAuthUser> => {
     const userCreated = await this.userService.createUser(user);
 
-    const token = this.jwtService.sign({ userId: userCreated.id.toString() });
+    const token = this.jwtService.sign({ userId: userCreated.id });
     if (!token) {
       throw new InternalServerError("Failed to generate token", {
         origin: "AuthService.registerUser",
@@ -49,7 +49,7 @@ export class AuthService {
       });
     }
 
-    const token = this.jwtService.sign({ userId: safeUser.id.toString() });
+    const token = this.jwtService.sign({ userId: safeUser.id });
     if (!token) {
       throw new InternalServerError("Failed to generate token", {
         origin: "AuthService.loginUser",

@@ -29,14 +29,6 @@ describe("AuthService - Integration Tests", () => {
       jwtService,
       passwordHash
     );
-
-    // Clean up database before each test
-    await UserModel.deleteMany({});
-  });
-
-  afterEach(async () => {
-    // Clean up database after each test
-    await UserModel.deleteMany({});
   });
 
   describe("registerUser", () => {

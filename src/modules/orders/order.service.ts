@@ -30,6 +30,12 @@ export class OrderService {
     order: CreateOrderInput,
     user: IUser
   ): Promise<IOrder> => {
+    if (order.services.length === 0) {
+      throw new BadRequestError("Services are required", {
+        origin: "OrderService.createOrder",
+      });
+    }
+
     const services = order.services.map((service) => ({
       ...service,
       id: new Types.ObjectId(),
@@ -37,12 +43,6 @@ export class OrderService {
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
-
-    if (services.length === 0) {
-      throw new BadRequestError("Services are required", {
-        origin: "OrderService.createOrder",
-      });
-    }
 
     const totalValue = services.reduce(
       (acc: number, service: IOrderService) => acc + service.value,

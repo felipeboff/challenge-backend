@@ -18,14 +18,6 @@ describe("UserService - Integration Tests", () => {
     passwordHash = new PasswordHash();
     userRepository = new UserRepository(UserModel);
     userService = new UserService(userRepository, passwordHash);
-
-    // Clean up database before each test
-    await UserModel.deleteMany({});
-  });
-
-  afterEach(async () => {
-    // Clean up database after each test
-    await UserModel.deleteMany({});
   });
 
   describe("createUser", () => {

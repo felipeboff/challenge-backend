@@ -43,7 +43,7 @@ export class AuthMiddleware {
       });
     }
 
-    const userId = decoded.userId ? new Types.ObjectId(decoded.userId) : null;
+    const userId = decoded?.userId ? new Types.ObjectId(decoded.userId) : null;
     const user = userId ? await this.userRepository.findById(userId) : null;
     if (!user) {
       throw new UnauthorizedError("Unauthorized", {

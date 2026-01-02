@@ -53,16 +53,6 @@ describe("OrderService - Integration Tests", () => {
     userService = new UserService(userRepository, passwordHash);
     orderRepository = new OrderRepository(OrderModel);
     orderService = new OrderService(orderRepository);
-
-    // Clean up database before each test
-    await OrderModel.deleteMany({});
-    await UserModel.deleteMany({});
-  });
-
-  afterEach(async () => {
-    // Clean up database after each test
-    await OrderModel.deleteMany({});
-    await UserModel.deleteMany({});
   });
 
   describe("createOrder", () => {
