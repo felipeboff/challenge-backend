@@ -1,0 +1,101 @@
+### Extension VSCode: REST Client
+### https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+### Login
+# @name login
+POST http://localhost:3000/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "test1@example.com",
+  "password": "password"
+}
+
+### Token
+@token = {{login.response.body.token}}
+
+### Create Order
+# @name createOrder
+POST http://localhost:3000/api/orders HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "labName": "Lab 1",
+  "patientName": "Patient 1",
+  "clinicName": "Clinic 1",
+  "expiresAt": "2026-01-01T00:00:00.000Z",
+  "services": [
+    { "name": "Service 1", "value": 100 }
+  ]
+}
+
+### Get Orders
+# @name getOrders
+GET http://localhost:3000/api/orders?page=1&limit=100
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Order Id
+@orderId = {{getOrders.response.body.orders[0].id}}
+
+### Service Id
+@serviceId = {{getOrders.response.body.orders[0].services[0].id}}
+
+### Get Order By Id
+GET http://localhost:3000/api/orders/{{orderId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Update Order
+# @name updateOrder
+PUT http://localhost:3000/api/orders/{{orderId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": "{{orderId}}",
+  "labName": "Lab 221",
+  "patientName": "Patient 1",
+  "clinicName": "Clinic 1",
+  "stage": "created",
+  "status": "active",
+  "userId": "{{getOrders.response.body.orders[0].userId}}",
+  "services": [
+    {
+      "id": "{{serviceId}}",
+      "name": "Service 1",
+      "value": 100,
+      "status": "pending",
+      "createdAt": "2026-01-02T22:13:01.653Z",
+      "updatedAt": "2026-01-02T22:13:01.653Z"
+    }
+  ],
+  "expiresAt": "2026-01-01T00:00:00.000Z",
+  "createdAt": "2026-01-02T22:13:01.653Z",
+  "updatedAt": "2026-01-02T22:13:01.653Z"
+}
+
+### Update Service
+# @name updateService
+PUT http://localhost:3000/api/orders/{{orderId}}/services/{{serviceId}} HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Service 1",
+  "value": 10220,
+  "status": "pending"
+}
+
+### Create Service
+# @name createService
+POST http://localhost:3000/api/orders/{{orderId}}/services HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Service 854985",
+  "value": 2572787278
+}
+
