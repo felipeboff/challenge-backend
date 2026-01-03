@@ -155,16 +155,17 @@ export class OrderRepository {
       ...(query.stage && { stage: query.stage }),
     };
 
-    const result = await this.orderModel
-      .find(filter)
-      .skip((query.page - 1) * query.limit)
-      .limit(query.limit)
-      .lean();
-
-    const total = await this.orderModel.countDocuments(filter);
+    const [orders, total] = await Promise.all([
+      this.orderModel
+        .find(filter)
+        .skip((query.page - 1) * query.limit)
+        .limit(query.limit)
+        .lean(),
+      this.orderModel.countDocuments(filter),
+    ]);
 
     const pagination: IOrderPagination = {
-      orders: result.map(toObjectOrder),
+      orders: orders.map(toObjectOrder),
       total,
       page: query.page,
       limit: query.limit,

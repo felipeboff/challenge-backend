@@ -162,7 +162,7 @@ describe("OrderController - Unit Tests", () => {
       mockRequest.query = {};
       vi.mocked(mockOrderService.getOrders).mockResolvedValue(mockPagination);
 
-      await orderController.getOrders(
+      await orderController.getOrdersPaginated(
         mockRequest as Request,
         mockResponse as Response
       );
@@ -189,7 +189,7 @@ describe("OrderController - Unit Tests", () => {
       mockRequest.query = { page: "2", limit: "10" };
       vi.mocked(mockOrderService.getOrders).mockResolvedValue(mockPagination);
 
-      await orderController.getOrders(
+      await orderController.getOrdersPaginated(
         mockRequest as Request,
         mockResponse as Response
       );
@@ -216,7 +216,7 @@ describe("OrderController - Unit Tests", () => {
       mockRequest.query = { stage: ENUMOrderStage.CREATED };
       vi.mocked(mockOrderService.getOrders).mockResolvedValue(mockPagination);
 
-      await orderController.getOrders(
+      await orderController.getOrdersPaginated(
         mockRequest as Request,
         mockResponse as Response
       );
@@ -234,7 +234,7 @@ describe("OrderController - Unit Tests", () => {
       mockRequest.query = { page: "0", limit: "-1" };
 
       await expect(
-        orderController.getOrders(
+        orderController.getOrdersPaginated(
           mockRequest as Request,
           mockResponse as Response
         )

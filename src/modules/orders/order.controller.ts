@@ -28,7 +28,7 @@ export class OrderController {
     return HttpResponse.created(response, order);
   };
 
-  public getOrders = async (
+  public getOrdersPaginated = async (
     request: Request,
     response: Response
   ): Promise<Response<IOrderPagination>> => {

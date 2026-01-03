@@ -12,7 +12,7 @@ const orderService = new OrderService(orderRepository);
 const orderController = new OrderController(orderService);
 
 router.post("/", orderController.createOrder);
-router.get("/", orderController.getOrders);
+router.get("/", orderController.getOrdersPaginated);
 router.get("/:orderId", orderController.getOrderById);
 router.put("/:orderId", orderController.updateOrder);
 router.post("/:orderId/advance", orderController.advanceOrderStage);
