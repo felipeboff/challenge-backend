@@ -36,16 +36,8 @@ export class OrderService {
       });
     }
 
-    const services = order.services.map((service) => ({
-      ...service,
-      id: new Types.ObjectId(),
-      status: ENUMOrderServiceStatus.PENDING,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }));
-
-    const totalValue = services.reduce(
-      (acc: number, service: IOrderService) => acc + service.value,
+    const totalValue = order.services.reduce(
+      (acc: number, service: CreateServiceInput) => acc + service.value,
       0
     );
     if (totalValue <= 0) {
@@ -57,6 +49,14 @@ export class OrderService {
         }
       );
     }
+
+    const services = order.services.map((service) => ({
+      ...service,
+      id: new Types.ObjectId(),
+      status: ENUMOrderServiceStatus.PENDING,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }));
 
     const orderData: IOrder = {
       ...order,

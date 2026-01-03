@@ -39,17 +39,14 @@ const orderSchema = new mongoose.Schema<IOrder>(
     labName: {
       type: String,
       required: true,
-      index: true,
     },
     patientName: {
       type: String,
       required: true,
-      index: true,
     },
     clinicName: {
       type: String,
       required: true,
-      index: true,
     },
     stage: {
       type: String,
