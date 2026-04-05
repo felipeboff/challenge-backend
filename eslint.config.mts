@@ -7,7 +7,13 @@ import tseslint from "typescript-eslint";
 
 export default defineConfig([
   {
-    ignores: ["dist/**", "node_modules/**"],
+    ignores: [
+      "coverage/**",
+      "data/**",
+      "dist/**",
+      "eslint.config.mts",
+      "node_modules/**",
+    ],
   },
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
@@ -24,10 +30,7 @@ export default defineConfig([
     rules: {
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
-      "@typescript-eslint/no-unsafe-assignment": "warn",
-      "@typescript-eslint/no-unsafe-member-access": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-unsafe-argument": "error",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   prettier,
