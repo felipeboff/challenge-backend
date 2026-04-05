@@ -3,13 +3,13 @@ import { MongooseError } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import z from "zod";
 
+import errorHandlerMiddleware from "../../../middleware/error-handler.middleware";
 import {
   AppError,
   BadRequestError,
   StatusCodeError,
 } from "../../../shared/app-error";
 import logger from "../../../shared/logger";
-import errorHandlerMiddleware from "../../../middleware/error-handler.middleware";
 
 // Mock logger
 vi.mock("../../../shared/logger", () => ({
@@ -187,7 +187,7 @@ describe("ErrorHandlerMiddleware - Unit Tests", () => {
     });
 
     it("should handle null error", () => {
-      const result = errorHandlerMiddleware(
+      errorHandlerMiddleware(
         null as unknown as Error,
         mockRequest as Request,
         mockResponse as Response,
@@ -212,7 +212,7 @@ describe("ErrorHandlerMiddleware - Unit Tests", () => {
     it("should handle AppError without details", () => {
       const error = new AppError("Simple error", StatusCodeError.NOT_FOUND);
 
-      const result = errorHandlerMiddleware(
+      errorHandlerMiddleware(
         error,
         mockRequest as Request,
         mockResponse as Response,

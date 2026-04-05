@@ -1,19 +1,21 @@
+import "../../setup";
+
 import { Types } from "mongoose";
 import request from "supertest";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import app from "../../app";
+import app from "../../../app";
 import {
   ENUMOrderStage,
   ENUMOrderStatus,
-} from "../../modules/orders/order.type";
+} from "../../../modules/orders/order.type";
 import {
   createMockOrderInput,
   createMockServiceInput,
-} from "../mocks/order.mock";
-import { createAuthenticatedUser } from "./helpers/auth.helper";
+} from "../../mocks/order.mock";
+import { createAuthenticatedUser } from "../helpers/auth-test.helper";
 
-describe("Orders E2E Tests", () => {
+describe("Orders API Integration Tests", () => {
   let authToken: string;
   let userId: string;
   let secondUserToken: string;
@@ -545,13 +547,13 @@ describe("Orders E2E Tests", () => {
       const orderId = createResponse.body.id;
 
       // Advance to ANALYSIS
-      const analysisResponse = await request(app)
+      await request(app)
         .post(`/api/orders/${orderId}/advance`)
         .set("Authorization", `Bearer ${authToken}`)
         .expect(200);
 
       // Advance to COMPLETED
-      const completedResponse = await request(app)
+      await request(app)
         .post(`/api/orders/${orderId}/advance`)
         .set("Authorization", `Bearer ${authToken}`)
         .expect(200);

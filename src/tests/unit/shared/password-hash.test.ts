@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { PasswordHash } from "../../../shared/password-hash";
 import { env } from "../../../config/env";
+import { PasswordHash } from "../../../shared/password-hash";
 
 // Mock bcrypt module
 vi.mock("bcrypt", () => ({

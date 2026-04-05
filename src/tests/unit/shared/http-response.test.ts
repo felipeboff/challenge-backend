@@ -1,7 +1,7 @@
 import type { Response } from "express";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { HttpStatusCode, HttpResponse } from "../../../shared/http-response";
+import { HttpResponse,HttpStatusCode } from "../../../shared/http-response";
 
 describe("HttpResponse - Unit Tests", () => {
   let mockResponse: Response;

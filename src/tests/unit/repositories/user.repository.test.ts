@@ -1,10 +1,10 @@
 import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { NotFoundError } from "../../../shared/app-error";
 import { UserModel } from "../../../database/models/user.model";
 import { UserRepository } from "../../../modules/users/user.repository";
 import type { IUser } from "../../../modules/users/user.type";
+import { NotFoundError } from "../../../shared/app-error";
 import { createMockUserInput } from "../../mocks/user.mock";
 
 describe("UserRepository - Unit Tests", () => {

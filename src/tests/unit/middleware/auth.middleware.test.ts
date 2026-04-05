@@ -2,11 +2,11 @@ import type { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { UnauthorizedError } from "../../../shared/app-error";
-import type { JwtService } from "../../../shared/jwt-service";
+import { AuthMiddleware } from "../../../middleware/auth.middleware";
 import type { UserRepository } from "../../../modules/users/user.repository";
 import type { IUser } from "../../../modules/users/user.type";
-import { AuthMiddleware } from "../../../middleware/auth.middleware";
+import { UnauthorizedError } from "../../../shared/app-error";
+import type { JwtService } from "../../../shared/jwt-service";
 
 describe("AuthMiddleware - Unit Tests", () => {
   let authMiddleware: AuthMiddleware;

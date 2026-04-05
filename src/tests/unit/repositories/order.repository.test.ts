@@ -1,7 +1,6 @@
 import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { NotFoundError } from "../../../shared/app-error";
 import { OrderRepository } from "../../../modules/orders/order.repository";
 import type { GetOrdersQueryInput } from "../../../modules/orders/order.schema";
 import {
@@ -11,6 +10,7 @@ import {
   IOrder,
   IOrderService,
 } from "../../../modules/orders/order.type";
+import { NotFoundError } from "../../../shared/app-error";
 
 describe("OrderRepository - Unit Tests", () => {
   let orderRepository: OrderRepository;

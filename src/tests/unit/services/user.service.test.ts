@@ -1,15 +1,11 @@
 import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { UserRepository } from "../../../modules/users/user.repository";
+import { UserService } from "../../../modules/users/user.service";
+import type { IUser, IUserCreate } from "../../../modules/users/user.type";
 import { BadRequestError, NotFoundError } from "../../../shared/app-error";
 import type { PasswordHash } from "../../../shared/password-hash";
-import { UserService } from "../../../modules/users/user.service";
-import type { UserRepository } from "../../../modules/users/user.repository";
-import type {
-  IUser,
-  IUserCreate,
-  IUserSafe,
-} from "../../../modules/users/user.type";
 import { createMockUserInput } from "../../mocks/user.mock";
 
 describe("UserService - Unit Tests", () => {

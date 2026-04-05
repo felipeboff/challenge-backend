@@ -1,9 +1,8 @@
+import type { Request, Response } from "express";
 import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Request, Response } from "express";
 import { ZodError } from "zod";
 
-import { BadRequestError, NotFoundError } from "../../../shared/app-error";
 import { OrderController } from "../../../modules/orders/order.controller";
 import type { OrderService } from "../../../modules/orders/order.service";
 import type {
@@ -17,6 +16,7 @@ import {
   ENUMOrderStatus,
 } from "../../../modules/orders/order.type";
 import type { IUser } from "../../../modules/users/user.type";
+import { BadRequestError, NotFoundError } from "../../../shared/app-error";
 import {
   createMockOrderInput,
   createMockServiceInput,

@@ -1,13 +1,14 @@
-import mongoose from "mongoose";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import "../../setup";
 
-import { UnauthorizedError } from "../../../shared/app-error";
-import { JwtService } from "../../../shared/jwt-service";
-import { PasswordHash } from "../../../shared/password-hash";
+import { beforeEach, describe, expect, it } from "vitest";
+
 import { UserModel } from "../../../database/models/user.model";
 import { AuthService } from "../../../modules/auth/auth.service";
 import { UserRepository } from "../../../modules/users/user.repository";
 import { UserService } from "../../../modules/users/user.service";
+import { UnauthorizedError } from "../../../shared/app-error";
+import { JwtService } from "../../../shared/jwt-service";
+import { PasswordHash } from "../../../shared/password-hash";
 import { createMockUserInput } from "../../mocks/user.mock";
 
 describe("AuthService - Integration Tests", () => {
@@ -204,7 +205,7 @@ describe("AuthService - Integration Tests", () => {
       // Verify token can be verified
       const decoded = jwtService.verify(loginResult.token);
       expect(decoded).toBeTruthy();
-      expect(decoded?.userId).toBe(loginResult.user.id.toString());
+      expect(decoded?.userId.toString()).toBe(loginResult.user.id.toString());
     });
 
     it("should generate valid tokens for same user on different logins", async () => {
@@ -230,8 +231,8 @@ describe("AuthService - Integration Tests", () => {
       const decoded2 = jwtService.verify(loginResult2.token);
       expect(decoded1).toBeTruthy();
       expect(decoded2).toBeTruthy();
-      expect(decoded1?.userId).toBe(loginResult1.user.id.toString());
-      expect(decoded2?.userId).toBe(loginResult2.user.id.toString());
+      expect(decoded1?.userId.toString()).toBe(loginResult1.user.id.toString());
+      expect(decoded2?.userId.toString()).toBe(loginResult2.user.id.toString());
 
       // Tokens should be different (different timestamps/expiration)
       expect(loginResult1.token).not.toBe(loginResult2.token);

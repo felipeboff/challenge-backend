@@ -1,12 +1,12 @@
-import { Types } from "mongoose";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import "../../setup";
 
-import { BadRequestError, NotFoundError } from "../../../shared/app-error";
-import { PasswordHash } from "../../../shared/password-hash";
+import { Types } from "mongoose";
+import { beforeEach, describe, expect, it } from "vitest";
+
 import { OrderModel } from "../../../database/models/order.model";
 import { UserModel } from "../../../database/models/user.model";
-import { OrderService } from "../../../modules/orders/order.service";
 import { OrderRepository } from "../../../modules/orders/order.repository";
+import { OrderService } from "../../../modules/orders/order.service";
 import {
   ENUMOrderServiceStatus,
   ENUMOrderStage,
@@ -15,6 +15,8 @@ import {
 import { UserRepository } from "../../../modules/users/user.repository";
 import { UserService } from "../../../modules/users/user.service";
 import type { IUser } from "../../../modules/users/user.type";
+import { BadRequestError, NotFoundError } from "../../../shared/app-error";
+import { PasswordHash } from "../../../shared/password-hash";
 import {
   createMockOrderInput,
   createMockServiceInput,
@@ -24,7 +26,6 @@ import { createMockUserInput } from "../../mocks/user.mock";
 describe("OrderService - Integration Tests", () => {
   let orderService: OrderService;
   let orderRepository: OrderRepository;
-  let userService: UserService;
   let userRepository: UserRepository;
   let passwordHash: PasswordHash;
 
@@ -50,7 +51,7 @@ describe("OrderService - Integration Tests", () => {
     // Initialize real instances (no mocks)
     passwordHash = new PasswordHash();
     userRepository = new UserRepository(UserModel);
-    userService = new UserService(userRepository, passwordHash);
+    new UserService(userRepository, passwordHash);
     orderRepository = new OrderRepository(OrderModel);
     orderService = new OrderService(orderRepository);
   });

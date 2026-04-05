@@ -4,20 +4,20 @@ import { Types } from "mongoose";
 import { OrderModel } from "../database/models/order.model";
 import { UserModel } from "../database/models/user.model";
 import {
+  IOrderDocument,
+  toObjectOrder,
+} from "../modules/orders/order.repository";
+import {
   ENUMOrderServiceStatus,
   ENUMOrderStage,
   ENUMOrderStatus,
   IOrder,
 } from "../modules/orders/order.type";
+import { IUserDocument, toObjectUser } from "../modules/users/user.repository";
 import { IUser } from "../modules/users/user.type";
 import { PasswordHash } from "../shared/password-hash";
 import { createMockOrderInput } from "./mocks/order.mock";
 import { createMockUserInput } from "./mocks/user.mock";
-import { IUserDocument, toObjectUser } from "../modules/users/user.repository";
-import {
-  IOrderDocument,
-  toObjectOrder,
-} from "../modules/orders/order.repository";
 
 export async function seedDatabase(): Promise<{
   users: IUser[];

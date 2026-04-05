@@ -1,11 +1,13 @@
-import { Types } from "mongoose";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import "../../setup";
 
+import { Types } from "mongoose";
+import { beforeEach, describe, expect, it } from "vitest";
+
+import { UserModel } from "../../../database/models/user.model";
+import { UserRepository } from "../../../modules/users/user.repository";
+import { UserService } from "../../../modules/users/user.service";
 import { BadRequestError, NotFoundError } from "../../../shared/app-error";
 import { PasswordHash } from "../../../shared/password-hash";
-import { UserModel } from "../../../database/models/user.model";
-import { UserService } from "../../../modules/users/user.service";
-import { UserRepository } from "../../../modules/users/user.repository";
 import { createMockUserInput } from "../../mocks/user.mock";
 
 describe("UserService - Integration Tests", () => {

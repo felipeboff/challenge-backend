@@ -1,11 +1,14 @@
 import "../database/models/user.model";
 import "../database/models/order.model";
 
+import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import { afterAll, afterEach, beforeAll } from "vitest";
 
 import { env } from "../config/env";
 import { database } from "../database/database";
+
+let mongoMemoryServer: MongoMemoryServer | null = null;
 
 async function setupTestDatabase(): Promise<void> {
   if (mongoose.connection.readyState !== 0) {
@@ -16,37 +19,44 @@ async function setupTestDatabase(): Promise<void> {
     await database.clearConnection();
   }
 
-  await mongoose.connect(env.MONGO_URI, {
+  mongoMemoryServer = await MongoMemoryServer.create({
+    instance: {
+      ip: "127.0.0.1",
+      port: 27017,
+      portGeneration: false,
+    },
+  });
+
+  await mongoose.connect(mongoMemoryServer.getUri(), {
     dbName: env.MONGO_DB_TEST,
   });
 }
 
-async function teardownTestDatabase(): Promise<void> {
-  // const db = mongoose.connection.db;
-  // if (!db || !db.databaseName || db.databaseName !== env.MONGO_DB_TEST) {
-  //   throw new Error("Database name is not correct");
-  // }
+async function cleanupDatabase(): Promise<void> {
+  if (mongoose.connection.readyState !== 1) {
+    return;
+  }
 
-  // await db.dropDatabase();
-  await mongoose.connection.close();
-  await database.clearConnection();
+  await Promise.all(
+    Object.values(mongoose.connection.collections).map((collection) =>
+      collection.deleteMany({})
+    )
+  );
 }
 
-// async function cleanupDatabase(): Promise<void> {
-//   const db = mongoose.connection.db;
-//   if (!db || !db.databaseName || db.databaseName !== env.MONGO_DB_TEST) {
-//     throw new Error("Database name is not correct");
-//   }
-
-//   await db.dropDatabase();
-// }
+async function teardownTestDatabase(): Promise<void> {
+  await mongoose.connection.close();
+  await database.clearConnection();
+  await mongoMemoryServer?.stop();
+  mongoMemoryServer = null;
+}
 
 beforeAll(async () => {
   await setupTestDatabase();
 });
 
 afterEach(async () => {
-  // await cleanupDatabase();
+  await cleanupDatabase();
 });
 
 afterAll(async () => {
@@ -54,7 +64,7 @@ afterAll(async () => {
 });
 
 export {
-  // cleanupDatabase,
+  cleanupDatabase,
   setupTestDatabase,
   teardownTestDatabase,
 };

@@ -1,12 +1,6 @@
 import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  BadRequestError,
-  InternalServerError,
-  NotFoundError,
-} from "../../../shared/app-error";
-import { OrderService } from "../../../modules/orders/order.service";
 import type { OrderRepository } from "../../../modules/orders/order.repository";
 import type {
   CreateOrderInput,
@@ -15,17 +9,21 @@ import type {
   UpdateOrderInput,
   UpdateServiceInput,
 } from "../../../modules/orders/order.schema";
+import { OrderService } from "../../../modules/orders/order.service";
 import {
-  ALLOWED_ORDER_STAGE_TRANSITIONS,
   ENUMOrderServiceStatus,
   ENUMOrderStage,
   ENUMOrderStatus,
   IOrder,
   IOrderPagination,
   IOrderService,
-  ORDER_STAGE_SEQUENCE,
 } from "../../../modules/orders/order.type";
 import type { IUser } from "../../../modules/users/user.type";
+import {
+  BadRequestError,
+  InternalServerError,
+  NotFoundError,
+} from "../../../shared/app-error";
 import {
   createMockOrderInput,
   createMockServiceInput,

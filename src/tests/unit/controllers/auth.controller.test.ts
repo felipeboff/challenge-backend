@@ -1,12 +1,12 @@
+import type { Request, Response } from "express";
 import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Request, Response } from "express";
 import { ZodError } from "zod";
 
-import { BadRequestError, UnauthorizedError } from "../../../shared/app-error";
 import { AuthController } from "../../../modules/auth/auth.controller";
 import type { AuthService } from "../../../modules/auth/auth.service";
 import type { IAuthUser } from "../../../modules/auth/auth.type";
+import { BadRequestError, UnauthorizedError } from "../../../shared/app-error";
 import { createMockUserInput } from "../../mocks/user.mock";
 
 describe("AuthController - Unit Tests", () => {

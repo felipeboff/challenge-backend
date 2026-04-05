@@ -1,10 +1,12 @@
+import "../../setup";
+
 import request from "supertest";
 import { describe, expect, it } from "vitest";
 
-import app from "../../app";
-import { createMockUserInput } from "../mocks/user.mock";
+import app from "../../../app";
+import { createMockUserInput } from "../../mocks/user.mock";
 
-describe("Auth E2E Tests", () => {
+describe("Auth API Integration Tests", () => {
   describe("POST /api/auth/register", () => {
     it("should register a new user successfully", async () => {
       const userData = createMockUserInput();

@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
+import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import cleanupMiddleware from "../../../middleware/cleanup.middleware";
 import type { IUser } from "../../../modules/users/user.type";
-import { Types } from "mongoose";
 
 describe("CleanupMiddleware - Unit Tests", () => {
   let mockRequest: Partial<Request>;

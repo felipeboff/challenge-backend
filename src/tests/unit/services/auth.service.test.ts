@@ -1,16 +1,16 @@
 import { Types } from "mongoose";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { AuthService } from "../../../modules/auth/auth.service";
+import type { UserRepository } from "../../../modules/users/user.repository";
+import type { UserService } from "../../../modules/users/user.service";
+import type { IUser, IUserSafe } from "../../../modules/users/user.type";
 import {
   InternalServerError,
   UnauthorizedError,
 } from "../../../shared/app-error";
 import type { JwtService } from "../../../shared/jwt-service";
 import type { PasswordHash } from "../../../shared/password-hash";
-import { AuthService } from "../../../modules/auth/auth.service";
-import type { UserRepository } from "../../../modules/users/user.repository";
-import type { UserService } from "../../../modules/users/user.service";
-import type { IUser, IUserSafe } from "../../../modules/users/user.type";
 import { createMockUserInput } from "../../mocks/user.mock";
 
 describe("AuthService - Unit Tests", () => {
@@ -71,7 +71,7 @@ describe("AuthService - Unit Tests", () => {
 
       expect(mockUserService.createUser).toHaveBeenCalledWith(userInput);
       expect(mockJwtService.sign).toHaveBeenCalledWith({
-        userId: userId.toString(),
+        userId,
       });
       expect(result).toEqual({
         token: mockToken,
@@ -149,7 +149,7 @@ describe("AuthService - Unit Tests", () => {
         hashedPassword
       );
       expect(mockJwtService.sign).toHaveBeenCalledWith({
-        userId: userId.toString(),
+        userId,
       });
       expect(result).toEqual({
         token: mockToken,
