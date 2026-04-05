@@ -1,16 +1,16 @@
 import type { NextFunction, Request, Response } from "express";
 import { Types } from "mongoose";
 
+import { UserModel } from "../database/models/user.model";
+import {
+  type UserRepository as IUserRepository,
+  UserRepository,
+} from "../modules/users/user.repository";
 import { UnauthorizedError } from "../shared/app-error";
 import {
-  JwtService,
   type JwtService as IJwtService,
+  JwtService,
 } from "../shared/jwt-service";
-import {
-  UserRepository,
-  type UserRepository as IUserRepository,
-} from "../modules/users/user.repository";
-import { UserModel } from "../database/models/user.model";
 
 export class AuthMiddleware {
   constructor(

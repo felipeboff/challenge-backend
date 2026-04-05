@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 
 import { env } from "../config/env";
-import { transformObjectId } from "./transform-object-id";
 import { IAuthPayload } from "../modules/auth/auth.type";
+import { transformObjectId } from "./transform-object-id";
 
 export class JwtService {
   private readonly secret = env.JWT_SECRET;

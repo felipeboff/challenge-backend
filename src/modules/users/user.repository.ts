@@ -1,8 +1,8 @@
-import { Document, Types } from "mongoose";
+import { Types } from "mongoose";
 
 import { UserModel } from "../../database/models/user.model";
-import { IUser } from "./user.type";
 import { NotFoundError } from "../../shared/app-error";
+import { IUser } from "./user.type";
 
 export interface IUserDocument extends Omit<IUser, "id"> {
   _id: Types.ObjectId;

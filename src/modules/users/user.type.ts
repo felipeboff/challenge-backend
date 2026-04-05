@@ -8,7 +8,7 @@ export interface IUser {
   updatedAt: Date;
 }
 
-export interface IUserSafe extends Omit<IUser, "password"> {}
+export type IUserSafe = Omit<IUser, "password">;
 
 export interface IUserCreate {
   email: string;

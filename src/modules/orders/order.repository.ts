@@ -1,10 +1,10 @@
-import { type Document, type Model, QueryFilter, Types } from "mongoose";
+import { type Model, QueryFilter, Types } from "mongoose";
 
 import { NotFoundError } from "../../shared/app-error";
 import type { GetOrdersQueryInput } from "./order.schema";
 import type { IOrderPagination, IOrderService } from "./order.type";
-import { ENUMOrderStatus } from "./order.type";
 import type { IOrder } from "./order.type";
+import { ENUMOrderStatus } from "./order.type";
 
 export interface IOrderDocument extends Omit<IOrder, "id" | "services"> {
   _id: Types.ObjectId;

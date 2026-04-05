@@ -1,12 +1,12 @@
 import { Router } from "express";
 
 import { UserModel } from "../../database/models/user.model";
+import { JwtService } from "../../shared/jwt-service";
+import { PasswordHash } from "../../shared/password-hash";
 import { UserRepository } from "../users/user.repository";
 import { UserService } from "../users/user.service";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
-import { JwtService } from "../../shared/jwt-service";
-import { PasswordHash } from "../../shared/password-hash";
 
 const router = Router();
 
